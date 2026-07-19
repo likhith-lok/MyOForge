@@ -1,0 +1,14 @@
+body {
+    /* Gradient background from jade to olive green */
+    background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+    margin: 0;
+    height: 100vh;
+}
+
+#pagetitle {
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    color: white; /* Pops against the green gradient */
+    margin-top: 20%;
+}
