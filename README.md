@@ -32,10 +32,10 @@ Cloud Storage: AWS S3 or Firebase Storage
 Installation
 bash
 # Clone the repository
-git clone https://github.com/your-username/MyoForge.git
+git clone https://github.com/likhith-lok/MyOForge.git
 
 # Navigate into the project directory
-cd MyoForge
+cd MyOForge
 
 # Install dependencies
 npm install
