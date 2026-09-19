@@ -31,14 +31,56 @@ const PART_IMAGE_POOLS = {
     ]
 };
 
+const PART_COPY_RULES = [
+    { match: /engine|motor|rotary|long-block|crate/, purpose: 'provides the primary force that moves the vehicle', significance: 'it sets the build\'s power delivery, sound, packaging, and maintenance character' },
+    { match: /turbo|supercharger|intake|throttle|manifold|filter/, purpose: 'controls the volume and pressure of air entering the power unit', significance: 'it changes throttle response, available power, and the demands placed on engine tuning' },
+    { match: /fuel|injector|ignition|spark|oxygen|ecu|bms|inverter/, purpose: 'meters energy or manages the signals that make the system behave correctly', significance: 'it improves control, repeatability, and the ability to tune the car safely' },
+    { match: /transmission|clutch|flywheel|driveshaft|differential|transfer|gear/, purpose: 'moves torque through the drivetrain toward the driven wheels', significance: 'it changes acceleration feel, traction behavior, and how the car handles repeated load' },
+    { match: /radiator|cooler|coolant|thermostat|hvac|compressor|fan|battery cooling/, purpose: 'moves heat away from a mechanical or cabin system', significance: 'it protects reliability and keeps performance consistent when conditions become demanding' },
+    { match: /suspension|coilover|spring|damper|sway|control arm|bushing|subframe|brace|mount/, purpose: 'controls chassis movement and keeps the car aligned with the road', significance: 'it affects grip, comfort, steering confidence, and tire life' },
+    { match: /wheel|tire|spacer|hub|slick/, purpose: 'forms part of the contact patch between the car and the road', significance: 'it has an immediate effect on traction, braking, ride quality, and stance' },
+    { match: /brake|pad|rotor|master cylinder|handbrake/, purpose: 'turns vehicle speed into controlled stopping force', significance: 'it improves pedal confidence, heat resistance, and safety under repeated braking' },
+    { match: /steering|tie-rod|ball joint|rack|pedal|control|gauge|switch/, purpose: 'translates driver input into precise vehicle control or useful feedback', significance: 'it makes the car easier to understand and more predictable at the limit' },
+    { match: /hood|fender|bumper|door|quarter|rocker|trunk|panel|grille|mirror|badge|emblem/, purpose: 'changes a visible body surface or the structure supporting it', significance: 'it shapes the car\'s identity while influencing weight, protection, and airflow' },
+    { match: /splitter|canard|skirt|diffuser|spoiler|wing|ducktail|undertray|aero|duct/, purpose: 'guides air around, over, or underneath the vehicle', significance: 'it balances drag, cooling, stability, and usable aerodynamic load' },
+    { match: /glass|windshield|window|roof|sunroof|handle|access|keyless/, purpose: 'changes visibility, weather sealing, access, or the cabin\'s relationship with the outside', significance: 'it affects comfort, weight, light, security, and daily usability' },
+    { match: /seat|harness|headrest|isofix|restraint|interior|leather|alcantara|trim|mat|console/, purpose: 'changes how occupants are supported and how the cabin feels', significance: 'it defines comfort, posture, safety, durability, and the tactile personality of the build' },
+    { match: /audio|speaker|amplifier|subwoofer|infotainment|screen|carplay|usb|antenna/, purpose: 'adds sound, media, communication, or connected information to the cabin', significance: 'it improves the everyday experience without changing the vehicle\'s core dynamics' },
+    { match: /light|headlight|tail|fog|underglow|signal|lamp/, purpose: 'controls how the vehicle sees and is seen', significance: 'it improves visibility, safety, recognition, and the car\'s nighttime character' },
+    { match: /battery|alternator|starter|fuse|wiring|ground|voltage|electrical|telemetry|sensor|camera|radar|monitor/, purpose: 'measures, stores, or distributes electrical information and energy', significance: 'it makes the vehicle more reliable, diagnosable, aware, and ready for future upgrades' },
+    { match: /airbag|safety|rollover|abs|traction|stability|fire|first-aid|emergency|blind-spot/, purpose: 'adds a layer of protection or hazard awareness', significance: 'it helps the driver use the rest of the build responsibly and recover from unexpected events' },
+    { match: /exhaust|header|downpipe|catalytic|muffler|resonator|emission|evap|heat shield/, purpose: 'routes, filters, quiets, or protects against hot exhaust gases', significance: 'it changes sound, heat control, flow, efficiency, and road-use practicality' },
+    { match: /paint|wrap|coating|film|chrome|finish/, purpose: 'changes or protects the visible surface of the vehicle', significance: 'it is the clearest visual signature of the build and helps preserve the body beneath it' },
+    { match: /cargo|trunk|tow|rack|box|bike|ski|recovery|winch|jack|utility|storage/, purpose: 'adds carrying, recovery, or practical capability', significance: 'it lets the vehicle support more of the owner\'s real life beyond the workshop' },
+    { match: /service|drain|catch|fluid|plumb|hose|line|reservoir|filter|diagnostic|seal/, purpose: 'makes a mechanical system easier to service, monitor, or keep sealed', significance: 'it turns a dramatic build into a dependable vehicle that can be maintained over time' },
+    { match: /track|race|lap|data|transponder|pit|competition|number|alignment|rain light|window net/, purpose: 'prepares the vehicle or driver for repeatable high-load use', significance: 'it prioritizes consistency, feedback, cooling, and protection over convenience' }
+];
+
+function getPartCopy(id, name, purpose, significance) {
+    const rule = PART_COPY_RULES.find(candidate => candidate.match.test(`${id} ${name}`));
+    if (rule) return rule;
+    return {
+        purpose: `${purpose} through a dedicated ${name.toLowerCase()} assembly`,
+        significance: `${significance}, with this component providing a more focused way to shape the final build`
+    };
+}
+
 function makePart(id, name, icon, imageGroup, purpose, significance, index) {
+    const copy = getPartCopy(id, name, purpose, significance);
+    const focus = [
+        'quicker response and immediacy',
+        'control and repeatability',
+        'durability under load',
+        'comfort and refinement',
+        'efficient packaging and service access'
+    ][index % 5];
     return {
         id,
         name,
         icon,
         image: PART_IMAGE_POOLS[imageGroup][index % PART_IMAGE_POOLS[imageGroup].length],
-        description: `${name} ${purpose}.`,
-        significance: `${significance}.`
+        description: `${name} ${copy.purpose}, with this choice emphasizing ${focus}.`,
+        significance: `${copy.significance}, especially when the build prioritizes ${focus}; the ${name.toLowerCase()} choice gives that priority its own hardware expression.`
     };
 }
 
@@ -153,6 +195,26 @@ const LEGACY_CATEGORY_ALIASES = {
     'Exhaust System': 'Exhaust & Emissions',
     'Paint & Wrap': 'Paint, Wrap & Finish'
 };
+
+const BEGINNER_CATEGORY_KEYS = [
+    'Engine Core',
+    'Wheels & Tires',
+    'Suspension Geometry',
+    'Braking Hardware',
+    'Body Panels',
+    'Interior Trim & Comfort',
+    'Exterior Lighting',
+    'Safety Systems'
+];
+
+function getVisibleCategories() {
+    return userRole === 'beginner' ? BEGINNER_CATEGORY_KEYS : Object.keys(CAR_PARTS);
+}
+
+function getVisibleParts(category) {
+    const parts = CAR_PARTS[category]?.parts || [];
+    return userRole === 'beginner' ? parts.slice(0, 5) : parts;
+}
 /*
     'Engine & Drivetrain': {
         icon: 'fa-car-battery',
@@ -731,6 +793,7 @@ function saveCar() {
 // Component Rendering Functions
 
 function renderLandingPage() {
+    const signedIn = Boolean(currentUser);
     return `
         <div class="landing-page">
             <nav class="site-nav">
@@ -765,16 +828,35 @@ function renderLandingPage() {
                         <button class="role-btn ${userRole === 'enthusiast' ? 'active' : ''}" onclick="setUserRole('enthusiast')"><i class="fas fa-bolt"></i> Enthusiast</button>
                     </div>
                     <div class="role-info"><i class="fas fa-sliders-h"></i> Your role is a starting point, never a lock-in.</div>
-                    <button class="get-started-btn" onclick="proceedFromLanding()">Sign in with Gmail <i class="fab fa-google"></i></button>
+                    <button class="get-started-btn" onclick="${signedIn ? "render('garage')" : 'proceedFromLanding()'}">${signedIn ? 'Enter My Garage' : 'Sign in with Gmail'} <i class="fas fa-arrow-right"></i></button>
                 </section>
             </div>
+
+            <section class="landing-lower">
+                <div class="landing-section-intro">
+                    <div class="eyebrow">A better way to imagine a car</div>
+                    <h2>From first sketch to final detail.</h2>
+                </div>
+                <div class="landing-feature-grid">
+                    <article><i class="fas fa-layer-group"></i><h3>Every layer matters</h3><p>Explore powertrain, structure, cabin, electronics, safety, utility, and finish in one calm workspace.</p></article>
+                    <article><i class="fas fa-book-open"></i><h3>Learn as you build</h3><p>Beginner mode keeps the first decisions approachable. Enthusiast mode opens the full workshop.</p></article>
+                    <article><i class="fas fa-floppy-disk"></i><h3>Your garage, your directions</h3><p>Keep multiple ideas alive locally and return to any build when the next idea arrives.</p></article>
+                </div>
+            </section>
+            <section class="developer-section">
+                <div>
+                    <div class="eyebrow">Behind the forge</div>
+                    <h2>Built by an independent developer.</h2>
+                </div>
+                <p>MyoForge is a personal experiment in making automotive knowledge feel tangible. It is designed to give curious people a place to ask “what if?” and turn that question into a considered build.</p>
+            </section>
         </div>
     `;
 }
 
 function renderBeginnerGuide() {
-    const categoryCount = Object.keys(CAR_PARTS).length;
-    const partCount = Object.values(CAR_PARTS).reduce((total, category) => total + category.parts.length, 0);
+    const categoryCount = BEGINNER_CATEGORY_KEYS.length;
+    const partCount = BEGINNER_CATEGORY_KEYS.reduce((total, category) => total + getVisibleParts(category).length, 0);
     return `
         <div class="onboarding-guide">
             <div class="guide-container">
@@ -793,7 +875,7 @@ function renderBeginnerGuide() {
                     <div class="guide-step">
                         <div class="step-number">2</div>
                         <h3>Choose a Category</h3>
-                        <p>Browse ${categoryCount} logical systems covering the engine, chassis, body, cabin, electronics, safety, EV hardware, utility, and competition equipment. There are ${partCount} components to explore.</p>
+                        <p>Browse ${categoryCount} friendly starting points covering the engine, wheels, suspension, brakes, body, cabin, lights, and safety. There are ${partCount} carefully chosen components to explore.</p>
                     </div>
                     
                     <div class="guide-step">
@@ -966,8 +1048,9 @@ function renderCarBuilder() {
     const car = getCurrentCar();
     if (!car) return renderCarGarage();
     
-    const selectedCategory = currentCategory || Object.keys(CAR_PARTS)[0];
-    const categoryParts = CAR_PARTS[selectedCategory]?.parts || [];
+    const visibleCategories = getVisibleCategories();
+    const selectedCategory = visibleCategories.includes(currentCategory) ? currentCategory : visibleCategories[0];
+    const categoryParts = getVisibleParts(selectedCategory);
     
     return `
         <div class="car-builder">
@@ -994,7 +1077,7 @@ function renderCarBuilder() {
                             <button class="sidebar-toggle" onclick="toggleCategorySidebar()" aria-label="Collapse systems menu" title="Collapse systems menu"><i class="fas fa-chevron-left"></i></button>
                         </div>
                         <div class="category-list">
-                            ${Object.keys(CAR_PARTS).map(category => `
+                            ${visibleCategories.map(category => `
                                 <button class="category-item ${selectedCategory === category ? 'active' : ''}"
                                         onclick="selectCategory('${category}')" title="${category}">
                                     <i class="fas ${CAR_PARTS[category].icon}"></i>
@@ -1099,7 +1182,7 @@ function renderRoleControl() {
 function renderAppHeader() {
     return `
         <header class="app-header">
-            <a class="app-brand" href="#" onclick="goBackToLanding(); return false;">Myo<span>Forge</span></a>
+            <a class="app-brand" href="#landing" onclick="goBackToLanding()">Myo<span>Forge</span></a>
             <div class="app-header-meta">vehicle composition studio / ${userRole || 'custom'} mode</div>
             <div class="app-header-actions">
                 ${renderRoleControl()}
@@ -1160,6 +1243,7 @@ function proceedFromLanding() {
 }
 
 function goBackToLanding() {
+    window.location.hash = 'landing';
     render('landing');
 }
 
@@ -1277,6 +1361,8 @@ function render(page = null) {
     
     // Determine which page to show
     if (!currentUser) {
+        content = renderLandingPage();
+    } else if (page === 'landing') {
         content = renderLandingPage();
     } else if (page === 'enthusiastOnboarding') {
         content = renderEnthusiastOnboarding();
