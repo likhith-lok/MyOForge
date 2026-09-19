@@ -6,8 +6,8 @@ MyoForge is a next-generation automotive customization platform enabling users t
 ## Core Features Implemented
 
 ### 1. Landing Page & Authentication
-- Olive green theme palette with gradient backgrounds
-- Gmail OAuth integration for user signup/login
+- Olive, brass, and acid-green studio palette with grid texture
+- Gmail-style demo sign-in backed by localStorage; real OAuth requires project credentials
 - Role selection toggle: "Enthusiast" vs "Beginner" (changeable anytime)
 - Message indicating users can change their role later
 - Responsive design
@@ -54,43 +54,18 @@ MyoForge is a next-generation automotive customization platform enabling users t
 - Real-time preview of customizations
 
 ## Technical Stack
-- **Frontend:** React + Vite
-- **Styling:** Tailwind CSS + Custom CSS for animations
-- **Authentication:** Firebase Auth (Gmail OAuth)
-- **Database:** Firebase Firestore
-- **State Management:** React Context API
-- **3D Rendering:** Three.js (future enhancement)
+- **Frontend:** Vanilla JavaScript served from a single HTML entry point
+- **Styling:** Custom CSS with responsive layouts and 3D flip transforms
+- **Authentication:** Local demo session; Firebase/Google OAuth is a production integration step
+- **Persistence:** Browser localStorage for profiles and multiple car builds
+- **Images:** Remote Unsplash automotive imagery for the prototype
 
 ## File Structure
 ```
 MyoForge/
-├── src/
-│   ├── components/
-│   │   ├── LandingPage.jsx
-│   │   ├── OnboardingGuide.jsx
-│   │   ├── CarBuilder.jsx
-│   │   ├── PartSelector.jsx
-│   │   ├── CarGarage.jsx
-│   │   └── Navigation.jsx
-│   ├── context/
-│   │   ├── AuthContext.jsx
-│   │   └── UserPreferencesContext.jsx
-│   ├── hooks/
-│   │   └── useCarBuilder.js
-│   ├── utils/
-│   │   ├── carParts.js
-│   │   └── animations.js
-│   ├── styles/
-│   │   ├── theme.css
-│   │   ├── animations.css
-│   │   └── global.css
-│   └── App.jsx
-├── public/
-│   └── car-parts/
-│       ├── engines/
-│       ├── wheels/
-│       ├── body-kits/
-│       └── ...
+├── index.html
+├── styles.css
+├── myoforge.js
 └── README.md
 ```
 

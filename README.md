@@ -14,7 +14,7 @@ MyoForge is a cutting-edge automotive customization platform that empowers users
 - **Multiple Car Builds:** Create unlimited custom cars and explore different build philosophies
 - **Real-Time Preview:** See your customizations instantly as you add or remove parts
 - **Persistent Storage:** All builds are saved to your profile
-- **Gmail Authentication:** Quick and easy login with Gmail account
+- **Gmail Entry:** Gmail-styled local demo sign-in; connect Firebase Google OAuth for production accounts
 
 ### 👥 User Modes
 
@@ -56,7 +56,7 @@ MyoForge is a cutting-edge automotive customization platform that empowers users
    - Matte Black, Pearl White, Metallic Red, Carbon Fiber Wrap, Custom Wrap, Chrome Trim
 
 ### 🎨 Design Highlights
-- **Olive Green Theme Palette:** Premium color scheme with gold accents
+- **Olive Green Studio Palette:** Acid green, brass, and deep olive create a distinctive configuration workspace
 - **Minimalistic Animations:** Smooth, clean interactions without jarring effects
 - **3D Flip Animation:** Parts reveal descriptions with elegant 180° horizontal flip on hover
 - **Responsive Design:** Works seamlessly on desktop, tablet, and mobile devices
@@ -70,7 +70,7 @@ MyoForge is a cutting-edge automotive customization platform that empowers users
 - **Storage:** LocalStorage for demo (Firebase ready for production)
 - **Authentication:** Simulated Gmail OAuth (Firebase Auth ready)
 - **Icons:** FontAwesome 6.4.0
-- **Fonts:** Google Fonts (Inter, Outfit)
+- **Fonts:** Google Fonts (Manrope, DM Mono)
 
 ### File Structure
 ```

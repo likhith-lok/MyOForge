@@ -581,40 +581,40 @@ function saveCar() {
 function renderLandingPage() {
     return `
         <div class="landing-page">
-            <div class="landing-hero">
-                <h1>MyoForge</h1>
-                <p class="tagline">Create Your Dream Car</p>
-                <p class="description">
-                    Customize every single part of your vehicle with unprecedented freedom and precision. 
-                    From engines to exhaust systems, body kits to interior upgrades - build the car you've always imagined.
-                </p>
-            </div>
-            
-            <div class="role-selector">
-                <h2>How would you like to get started?</h2>
-                
-                <div class="role-toggle-container">
-                    <div class="role-toggle">
-                        <button class="role-btn ${!userRole || userRole === 'beginner' ? 'active' : ''}" 
-                                onclick="setUserRole('beginner')">
-                            <i class="fas fa-book"></i><br>Beginner
-                        </button>
+            <nav class="site-nav">
+                <a class="brand" href="#">myo<span>forge</span></a>
+                <div class="nav-meta">vehicle composition studio / 01</div>
+            </nav>
+
+            <main class="landing-main">
+                <section class="landing-copy">
+                    <div class="eyebrow">The anti-stock configurator</div>
+                    <h1>Build beyond <em>stock.</em></h1>
+                    <p class="lede">A tactile studio for making the car that exists in your head. Choose the systems, surfaces, and details that make it yours.</p>
+                    <div class="landing-notes">
+                        <div><strong>48+</strong> component types</div>
+                        <div><strong>∞</strong> build directions</div>
+                        <div><strong>local</strong> private garage</div>
                     </div>
-                    <div class="role-toggle">
-                        <button class="role-btn ${userRole === 'enthusiast' ? 'active' : ''}" 
-                                onclick="setUserRole('enthusiast')">
-                            <i class="fas fa-star"></i><br>Enthusiast
-                        </button>
+                </section>
+
+                <section class="hero-machine">
+                    <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1100&q=85" alt="A customized sports car ready for configuration">
+                    <div class="machine-caption">your next obsession / ready</div>
+                </section>
+
+                <section class="entry-panel">
+                    <div class="section-kicker">Start a private build</div>
+                    <h2>How do you want to enter?</h2>
+                    <p>Pick a pace. You can change this preference from your profile whenever your confidence catches up with your curiosity.</p>
+
+                    <div class="role-toggle-container">
+                        <button class="role-btn ${!userRole || userRole === 'beginner' ? 'active' : ''}" onclick="setUserRole('beginner')"><i class="fas fa-compass"></i> Beginner</button>
+                        <button class="role-btn ${userRole === 'enthusiast' ? 'active' : ''}" onclick="setUserRole('enthusiast')"><i class="fas fa-bolt"></i> Enthusiast</button>
                     </div>
-                </div>
-                
-                <div class="role-info">
-                    <p><i class="fas fa-info-circle"></i> You can change this setting anytime in your profile.</p>
-                </div>
-                
-                <button class="get-started-btn" onclick="proceedFromLanding()">
-                    Get Started <i class="fas fa-arrow-right"></i>
-                </button>
+                    <div class="role-info"><i class="fas fa-sliders-h"></i> Your role is a starting point, never a lock-in.</div>
+                    <button class="get-started-btn" onclick="proceedFromLanding()">Sign in with Gmail <i class="fab fa-google"></i></button>
+                </section>
             </div>
         </div>
     `;
@@ -839,7 +839,7 @@ function renderCarBuilder() {
                                 ${categoryParts.map(part => `
                                     <div class="part-tile">
                                         <div class="part-tile-inner">
-                                            <div class="part-front">
+                                            <div class="part-front" style="background-image: url('${getPartImage(selectedCategory)}');">
                                                 <div class="part-icon">
                                                     <i class="fas ${part.icon}"></i>
                                                 </div>
@@ -894,6 +894,20 @@ function renderCarBuilder() {
     `;
 }
 
+function getPartImage(category) {
+    const images = {
+        'Engine & Drivetrain': 'https://images.unsplash.com/photo-1485291571150-772bcfc10da5?auto=format&fit=crop&w=600&q=80',
+        'Suspension & Wheels': 'https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=600&q=80',
+        'Body & Exterior': 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=600&q=80',
+        'Interior': 'https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=600&q=80',
+        'Lighting': 'https://images.unsplash.com/photo-1542282088-fe8426682b8f?auto=format&fit=crop&w=600&q=80',
+        'Performance Systems': 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=600&q=80',
+        'Exhaust System': 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=600&q=80',
+        'Paint & Wrap': 'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=600&q=80'
+    };
+    return images[category] || images['Body & Exterior'];
+}
+
 function renderAuthSection() {
     if (!currentUser) {
         return `
@@ -929,7 +943,6 @@ function renderAuthSection() {
 function proceedFromLanding() {
     if (!currentUser) {
         simulateGmailLogin();
-        return;
     }
     
     if (!userRole) {
@@ -964,11 +977,35 @@ function startBuilding() {
 }
 
 function showCreateCarDialog() {
-    const name = prompt('Enter car name:', 'My Custom Build');
-    if (name) {
-        createNewCar(name);
-        editCar(userCars[userCars.length - 1].id);
-    }
+    const modal = document.createElement('div');
+    modal.className = 'modal-backdrop';
+    modal.innerHTML = `
+        <form class="create-car-modal" onsubmit="confirmCreateCar(event)">
+            <div class="section-kicker">New configuration</div>
+            <h2>Name your build</h2>
+            <p>Give this direction a name. You can keep as many versions in your garage as you like.</p>
+            <label for="car-name">Build name</label>
+            <input id="car-name" name="carName" value="My Custom Build" maxlength="40" autofocus>
+            <div class="modal-actions">
+                <button type="button" class="builder-btn" onclick="closeCreateCarDialog()">Cancel</button>
+                <button type="submit" class="builder-btn save">Create build</button>
+            </div>
+        </form>
+    `;
+    document.body.appendChild(modal);
+    modal.querySelector('input').select();
+}
+
+function confirmCreateCar(event) {
+    event.preventDefault();
+    const name = event.target.carName.value.trim() || 'My Custom Build';
+    createNewCar(name);
+    closeCreateCarDialog();
+    editCar(userCars[userCars.length - 1].id);
+}
+
+function closeCreateCarDialog() {
+    document.querySelector('.modal-backdrop')?.remove();
 }
 
 function editCar(carId) {
@@ -1027,8 +1064,8 @@ function render(page = null) {
         content = renderCarGarage();
     }
     
-    root.innerHTML = content + renderAuthSection();
-    
+    root.innerHTML = content + (currentUser ? renderAuthSection() : '');
+
     // Close dropdown when clicking elsewhere
     document.addEventListener('click', (e) => {
         const dropdown = document.getElementById('userDropdown');
