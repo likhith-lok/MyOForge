@@ -127,6 +127,18 @@ const CAR_PARTS = {
     ]),
     'Track & Competition': makeCategory('fa-flag-checkered', 'chassis', 'prepares the car for repeatable high-load driving', 'prioritizes consistency, feedback, cooling, and driver protection over convenience', [
         ['lap-timer', 'GPS Lap Timer', 'fa-stopwatch'], ['data-logger', 'Performance Data Logger', 'fa-chart-line'], ['transponder', 'Race Transponder Mount', 'fa-satellite-dish'], ['tow-straps', 'Competition Tow Straps', 'fa-link'], ['window-net', 'Driver Window Net', 'fa-border-style'], ['fire-bottle', 'Motorsport Fire Bottle', 'fa-fire-extinguisher'], ['pit-radio', 'Pit Radio System', 'fa-headset'], ['rain-light', 'Rain Light', 'fa-lightbulb'], ['number-panels', 'Magnetic Number Panels', 'fa-hashtag'], ['track-alignment', 'Track Alignment Package', 'fa-ruler-combined']
+    ]),
+    'Sensors & Driver Assistance': makeCategory('fa-satellite-dish', 'electrical', 'measures the vehicle environment and operating state', 'adds awareness, diagnostics, and controllable assistance without hiding the underlying hardware', [
+        ['parking-sensors', 'Parking Sensor Array', 'fa-bullseye'], ['surround-camera', '360-Degree Camera System', 'fa-camera'], ['forward-camera', 'Forward Collision Camera', 'fa-video'], ['radar-cruise', 'Radar Cruise Sensor', 'fa-satellite-dish'], ['lane-camera', 'Lane-Keeping Camera', 'fa-road'], ['tpms-module', 'Direct TPMS Module', 'fa-tire'], ['oil-pressure-sensor', 'Oil Pressure Sensor', 'fa-gauge-high'], ['egt-sensors', 'Exhaust Gas Temperature Sensors', 'fa-temperature-high'], ['wideband-sensor', 'Wideband Lambda Sensor', 'fa-wave-square'], ['obd-monitor', 'OBD Diagnostic Monitor', 'fa-plug']
+    ]),
+    'Fluids & Plumbing': makeCategory('fa-tint', 'engine', 'routes the fluids that lubricate, cool, and actuate vehicle systems', 'supports dependable operation and makes service intervals easier to monitor', [
+        ['oil-lines', 'Braided Oil Lines', 'fa-grip-lines'], ['fuel-lines', 'PTFE Fuel Lines', 'fa-grip-lines'], ['coolant-lines', 'Silicone Coolant Hoses', 'fa-grip-lines'], ['brake-lines-hard', 'Hard Brake Lines', 'fa-grip-lines'], ['catch-tank', 'Coolant Catch Tank', 'fa-flask'], ['power-steering-cooler', 'Power Steering Cooler', 'fa-snowflake'], ['washer-tank', 'Large Washer Fluid Tank', 'fa-tint'], ['fluid-level-sensor', 'Fluid Level Sensors', 'fa-gauge-high'], ['quick-couplers', 'Motorsport Quick Couplers', 'fa-link'], ['bulkhead-fittings', 'Bulkhead AN Fittings', 'fa-circle']
+    ]),
+    'Security & Convenience': makeCategory('fa-lock', 'electrical', 'manages access, protection, and daily-use features', 'keeps an ambitious build practical, secure, and pleasant away from the workshop', [
+        ['alarm-system', 'Perimeter Alarm System', 'fa-bell'], ['immobilizer', 'Programmable Immobilizer', 'fa-lock'], ['gps-tracker', 'GPS Recovery Tracker', 'fa-location-arrow'], ['remote-start', 'Remote Start Module', 'fa-power-off'], ['keypad-entry', 'Numeric Door Keypad', 'fa-th'], ['power-liftgate', 'Power Liftgate', 'fa-arrow-up'], ['rain-sensor', 'Automatic Rain Sensor', 'fa-cloud-rain'], ['heated-mirrors', 'Heated Door Mirrors', 'fa-sun'], ['wireless-charger', 'Wireless Phone Charger', 'fa-mobile-alt'], ['garage-door', 'Integrated Garage Controller', 'fa-home']
+    ]),
+    'Off-Road & Recovery': makeCategory('fa-mountain', 'chassis', 'adds clearance, protection, and recovery capability for rough terrain', 'changes where the car can go and how confidently it can return', [
+        ['lift-kit', 'Long-Travel Lift Kit', 'fa-arrows-alt-v'], ['skid-plates', 'Full Skid Plate Set', 'fa-shield-alt'], ['rock-sliders', 'Rock Sliders', 'fa-minus'], ['roof-tent', 'Low-Profile Roof Tent', 'fa-campground'], ['snorkel', 'Raised Air Intake Snorkel', 'fa-wind'], ['locker-front', 'Front Differential Locker', 'fa-lock'], ['locker-rear', 'Rear Differential Locker', 'fa-lock'], ['traction-boards', 'Traction Boards', 'fa-road'], ['recovery-hooks', 'Rated Recovery Hooks', 'fa-link'], ['portable-air', 'Portable Air System', 'fa-wind']
     ])
 };
 
@@ -732,7 +744,7 @@ function renderLandingPage() {
                     <h1>Build beyond <em>stock.</em></h1>
                     <p class="lede">A tactile studio for making the car that exists in your head. Choose the systems, surfaces, and details that make it yours.</p>
                     <div class="landing-notes">
-                        <div><strong>260</strong> component types</div>
+                        <div><strong>300</strong> component types</div>
                         <div><strong>∞</strong> build directions</div>
                         <div><strong>local</strong> private garage</div>
                     </div>
@@ -896,9 +908,11 @@ function renderCarGarage() {
     return `
         <div class="car-garage">
             <div class="garage-header">
-                <h1><i class="fas fa-warehouse"></i> My Garage</h1>
+                <div>
+                    <div class="section-kicker">Build archive</div>
+                    <h1>My Garage</h1>
+                </div>
                 <div class="garage-actions">
-                    ${renderRoleControl()}
                     <button class="create-car-btn" onclick="showCreateCarDialog()">
                         <i class="fas fa-plus"></i> New Car Build
                     </button>
@@ -961,7 +975,6 @@ function renderCarBuilder() {
                 <div class="builder-header">
                     <h1><i class="fas fa-tools"></i> ${car.name}</h1>
                     <div class="builder-actions">
-                        ${renderRoleControl()}
                         <button class="builder-btn back" onclick="backToGarage()">
                             <i class="fas fa-arrow-left"></i> Back to Garage
                         </button>
@@ -972,18 +985,34 @@ function renderCarBuilder() {
                 </div>
                 
                 <div class="builder-content">
-                    <!-- Right side: Parts Grid & Categories -->
-                    <div>
-                        <div class="category-tabs">
-                            <div class="tabs-container">
-                                ${Object.keys(CAR_PARTS).map(category => `
-                                    <button class="tab-btn ${selectedCategory === category ? 'active' : ''}" 
-                                            onclick="selectCategory('${category}')">
-                                        <i class="fas ${CAR_PARTS[category].icon}"></i> ${category}
-                                    </button>
-                                `).join('')}
+                    <aside class="category-sidebar" id="categorySidebar">
+                        <div class="sidebar-heading">
+                            <div>
+                                <div class="section-kicker">Systems</div>
+                                <strong>Choose an area</strong>
                             </div>
-                            
+                            <button class="sidebar-toggle" onclick="toggleCategorySidebar()" aria-label="Collapse systems menu" title="Collapse systems menu"><i class="fas fa-chevron-left"></i></button>
+                        </div>
+                        <div class="category-list">
+                            ${Object.keys(CAR_PARTS).map(category => `
+                                <button class="category-item ${selectedCategory === category ? 'active' : ''}"
+                                        onclick="selectCategory('${category}')" title="${category}">
+                                    <i class="fas ${CAR_PARTS[category].icon}"></i>
+                                    <span>${category}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </aside>
+
+                    <main class="builder-workspace">
+                        <div class="category-tabs">
+                            <div class="workspace-heading">
+                                <div>
+                                    <div class="section-kicker">Active system</div>
+                                    <h2>${selectedCategory}</h2>
+                                </div>
+                                <span class="component-count">${categoryParts.length} components</span>
+                            </div>
                             <div class="parts-grid">
                                 ${categoryParts.map(part => `
                                     <div class="part-tile">
@@ -1007,9 +1036,8 @@ function renderCarBuilder() {
                                 `).join('')}
                             </div>
                         </div>
-                    </div>
+                    </main>
                     
-                    <!-- Left side: Car Preview & Summary -->
                     <div class="car-preview-section">
                         <div class="preview-title">Your Build</div>
                         <div class="car-preview">
@@ -1065,6 +1093,19 @@ function renderRoleControl() {
             <button class="mode-btn ${userRole === 'beginner' ? 'active' : ''}" onclick="switchRole('beginner')">Beginner</button>
             <button class="mode-btn ${userRole === 'enthusiast' ? 'active' : ''}" onclick="switchRole('enthusiast')">Enthusiast</button>
         </div>
+    `;
+}
+
+function renderAppHeader() {
+    return `
+        <header class="app-header">
+            <a class="app-brand" href="#" onclick="goBackToLanding(); return false;">Myo<span>Forge</span></a>
+            <div class="app-header-meta">vehicle composition studio / ${userRole || 'custom'} mode</div>
+            <div class="app-header-actions">
+                ${renderRoleControl()}
+                <button class="header-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Log out</button>
+            </div>
+        </header>
     `;
 }
 
@@ -1192,6 +1233,17 @@ function selectCategory(category) {
     render('builder');
 }
 
+function toggleCategorySidebar() {
+    const sidebar = document.getElementById('categorySidebar');
+    if (!sidebar) return;
+    const collapsed = sidebar.classList.toggle('collapsed');
+    const toggle = sidebar.querySelector('.sidebar-toggle');
+    if (toggle) {
+        toggle.setAttribute('aria-label', collapsed ? 'Expand systems menu' : 'Collapse systems menu');
+        toggle.setAttribute('title', collapsed ? 'Expand systems menu' : 'Collapse systems menu');
+    }
+}
+
 function changeRole() {
     const newRole = userRole === 'beginner' ? 'enthusiast' : 'beginner';
     switchRole(newRole);
@@ -1238,7 +1290,7 @@ function render(page = null) {
         content = renderCarGarage();
     }
     
-    root.innerHTML = content + (currentUser ? renderAuthSection() : '');
+    root.innerHTML = (currentUser ? renderAppHeader() : '') + content;
 
     // Close dropdown when clicking elsewhere
     document.addEventListener('click', (e) => {

@@ -23,8 +23,8 @@ Click "Sign in with Gmail" button (simulated for demo)
 
 | Feature | Details |
 |---------|---------|
-| 🚗 Car Categories | 26 major systems |
-| 🔧 Parts Available | 260 logical components |
+| 🚗 Car Categories | 30 major systems |
+| 🔧 Parts Available | 300 logical components |
 | 💾 Multiple Cars | Create unlimited builds |
 | 🎨 Customization | Every single part modifiable |
 | 📋 Real-time Preview | See changes instantly |
@@ -77,7 +77,7 @@ MyoForge features a sophisticated color scheme:
 
 ## 🔄 Car Parts Overview
 
-### 26 Customization Systems
+### 30 Customization Systems
 
 ```
 1. 🏎️ Powertrain                 (engine, intake, fuel, transmission, cooling)

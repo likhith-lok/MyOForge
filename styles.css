@@ -61,6 +61,14 @@ h1, h2, h3, h4 { line-height: 1.05; }
 .dropdown-item { border: 0; background: transparent; color: var(--paper); padding: 11px 16px; text-align: left; cursor: pointer; }
 .dropdown-item:hover { background: var(--olive); }
 
+.app-header { position: sticky; top: 0; z-index: 15; min-height: 70px; display: flex; align-items: center; gap: 28px; padding: 12px max(24px, calc((100vw - 1440px) / 2)); background: rgba(16,22,18,.96); border-bottom: 1px solid var(--line); backdrop-filter: blur(14px); }
+.app-brand { color: var(--paper); text-decoration: none; font-size: 1.08rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.app-brand span { color: var(--acid); }
+.app-header-meta { flex: 1; color: var(--muted); font: .64rem 'DM Mono', monospace; letter-spacing: .12em; text-transform: uppercase; }
+.app-header-actions { display: flex; align-items: center; gap: 10px; }
+.header-logout { padding: 9px 13px; border: 1px solid rgba(239,141,118,.55); background: transparent; color: var(--danger); cursor: pointer; font-size: .75rem; font-weight: 800; }
+.header-logout:hover { background: rgba(239,141,118,.12); }
+
 .onboarding-guide, .car-garage, .car-builder { min-height: 100vh; padding: 48px max(24px, calc((100vw - 1240px) / 2)); background: var(--ink); }
 .guide-container { max-width: 900px; margin: auto; }
 .guide-header { margin: 50px 0 34px; }
@@ -103,12 +111,28 @@ h1, h2, h3, h4 { line-height: 1.05; }
 .builder-btn { padding: 11px 15px; background: transparent; border: 1px solid var(--line); color: var(--paper); }
 .builder-btn.save { background: var(--brass); color: var(--ink); }
 .builder-btn:hover { border-color: var(--acid); }
-.builder-content { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 22px; }
+.builder-content { display: grid; grid-template-columns: 240px minmax(0, 1fr) 330px; gap: 18px; align-items: start; }
 .category-tabs, .car-preview-section { background: var(--panel); border: 1px solid var(--line); padding: 20px; }
-.car-preview-section { grid-column: 2; grid-row: 1; height: fit-content; position: sticky; top: 20px; }
-.tabs-container { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 16px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
-.tab-btn { white-space: nowrap; padding: 10px 12px; border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; font-size: .76rem; }
-.tab-btn.active, .tab-btn:hover { background: var(--olive); color: var(--paper); border-color: var(--acid); }
+.category-sidebar { position: sticky; top: 88px; max-height: calc(100vh - 110px); overflow: hidden; background: var(--panel); border: 1px solid var(--line); transition: width 220ms ease, opacity 220ms ease; }
+.sidebar-heading { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px; border-bottom: 1px solid var(--line); }
+.sidebar-heading strong { display: block; margin-top: 5px; font-size: .85rem; }
+.sidebar-toggle { width: 30px; height: 30px; border: 1px solid var(--line); background: transparent; color: var(--acid); cursor: pointer; }
+.sidebar-toggle:hover { background: var(--olive); }
+.category-list { max-height: calc(100vh - 180px); overflow-y: auto; padding: 8px; scrollbar-color: var(--olive) transparent; }
+.category-item { width: 100%; display: flex; align-items: center; gap: 10px; padding: 11px 10px; border: 0; border-left: 2px solid transparent; background: transparent; color: var(--muted); cursor: pointer; text-align: left; font-size: .73rem; }
+.category-item i { width: 18px; color: var(--olive-bright); text-align: center; }
+.category-item:hover, .category-item.active { background: rgba(99,119,53,.28); border-left-color: var(--acid); color: var(--paper); }
+.category-item.active i { color: var(--acid); }
+.category-sidebar.collapsed { width: 62px; }
+.category-sidebar.collapsed .sidebar-heading { justify-content: center; padding: 12px 8px; }
+.category-sidebar.collapsed .sidebar-heading > div, .category-sidebar.collapsed .category-item span { display: none; }
+.category-sidebar.collapsed .sidebar-toggle i { transform: rotate(180deg); }
+.category-sidebar.collapsed .category-item { justify-content: center; padding-inline: 0; }
+.workspace-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.workspace-heading h2 { margin-top: 6px; font-size: clamp(1.35rem, 2vw, 2rem); letter-spacing: -.05em; }
+.component-count { color: var(--muted); font: .65rem 'DM Mono', monospace; text-transform: uppercase; }
+.builder-workspace .category-tabs { min-width: 0; }
+.car-preview-section { grid-column: 3; grid-row: 1; height: fit-content; position: sticky; top: 88px; }
 .parts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
 .part-tile { perspective: 900px; min-height: 270px; }
 .part-tile-inner { position: relative; width: 100%; height: 270px; transition: transform 400ms ease; transform-style: preserve-3d; }
@@ -150,5 +174,6 @@ h1, h2, h3, h4 { line-height: 1.05; }
 @keyframes riseIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes guideStepIn { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes machineIn { from { opacity: 0; transform: translateX(35px); } to { opacity: .92; transform: translateX(0); } }
-@media (max-width: 900px) { .landing-main { grid-template-columns: 1fr; gap: 30px; padding-top: 40px; } .hero-machine { min-height: 340px; order: -1; } .hero-machine img { width: 90%; } .builder-content { grid-template-columns: 1fr; } .car-preview-section { grid-column: auto; grid-row: auto; position: static; } }
-@media (max-width: 600px) { .site-nav, .landing-main { width: min(100% - 32px, 1240px); } .nav-meta { display: none; } .landing-copy h1 { font-size: 3.3rem; } .landing-notes { gap: 14px; flex-wrap: wrap; } .entry-panel { padding: 22px; } .onboarding-guide, .car-garage, .car-builder { padding: 24px 16px; } .garage-header, .builder-header { align-items: start; flex-direction: column; } .garage-actions, .builder-actions { width: 100%; justify-content: flex-start; } .builder-btn { flex: 1; } .guide-navigation, .enthusiast-buttons { align-items: stretch; flex-direction: column; } .guide-nav-btn, .action-btn { width: 100%; text-align: center; } .mode-control { width: 100%; justify-content: center; } }
+@media (max-width: 1100px) { .builder-content { grid-template-columns: 210px minmax(0, 1fr); } .car-preview-section { grid-column: 1 / -1; grid-row: 2; position: static; } }
+@media (max-width: 900px) { .landing-main { grid-template-columns: 1fr; gap: 30px; padding-top: 40px; } .hero-machine { min-height: 340px; order: -1; } .hero-machine img { width: 90%; } .builder-content { grid-template-columns: 190px minmax(0, 1fr); } }
+@media (max-width: 600px) { .site-nav, .landing-main { width: min(100% - 32px, 1240px); } .nav-meta { display: none; } .landing-copy h1 { font-size: 3.3rem; } .landing-notes { gap: 14px; flex-wrap: wrap; } .entry-panel { padding: 22px; } .app-header { align-items: flex-start; flex-wrap: wrap; padding: 12px 16px; } .app-header-meta { order: 3; flex-basis: 100%; } .app-header-actions { margin-left: auto; } .app-header-actions .mode-control { width: auto; } .onboarding-guide, .car-garage, .car-builder { padding: 24px 16px; } .garage-header, .builder-header { align-items: start; flex-direction: column; } .garage-actions, .builder-actions { width: 100%; justify-content: flex-start; } .builder-btn { flex: 1; } .builder-content { grid-template-columns: 1fr; } .category-sidebar { position: static; max-height: 320px; } .category-sidebar.collapsed { width: 100%; max-height: 64px; } .car-preview-section { grid-column: auto; grid-row: auto; } .guide-navigation, .enthusiast-buttons { align-items: stretch; flex-direction: column; } .guide-nav-btn, .action-btn { width: 100%; text-align: center; } .mode-control { width: 100%; justify-content: center; } }

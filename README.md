@@ -9,7 +9,7 @@ MyoForge is a cutting-edge automotive customization platform that empowers users
 ## ✨ Features
 
 ### 🎯 Core Features
-- **Complete Vehicle Customization:** Explore 26 logical vehicle systems spanning powertrain, chassis, body, cabin, electronics, safety, EV hardware, utility, and track equipment
+- **Complete Vehicle Customization:** Explore 30 logical vehicle systems spanning powertrain, chassis, body, cabin, electronics, safety, EV hardware, utility, recovery, and track equipment
 - **Smart Role Selection:** Choose between "Beginner" and "Enthusiast" modes with personalized onboarding
 - **Multiple Car Builds:** Create unlimited custom cars and explore different build philosophies
 - **Real-Time Preview:** See your customizations instantly as you add or remove parts
@@ -31,7 +31,7 @@ MyoForge is a cutting-edge automotive customization platform that empowers users
 
 ### 🚗 Customization Catalog
 
-The builder currently contains **26 systems and 260 components**, including engine variants, forced induction, fuel and ignition, transmissions, cooling and HVAC, suspension geometry, wheels and tires, brakes, steering, body panels, aerodynamics, glass and access, exterior details, seats and restraints, interior trim, controls, audio, lighting, electrical, safety, EV drive, exhaust, finish, cargo, maintenance, and competition equipment.
+The builder currently contains **30 systems and 300 components**, including engine variants, forced induction, fuel and ignition, transmissions, cooling and HVAC, suspension geometry, wheels and tires, brakes, steering, body panels, aerodynamics, glass and access, exterior details, seats and restraints, interior trim, controls, audio, lighting, electrical, safety, EV drive, exhaust, finish, cargo, maintenance, sensors, fluid routing, security, off-road recovery, and competition equipment.
 
 Every component includes its own name, image assignment, function summary, significance note, and add/remove workflow.
 
