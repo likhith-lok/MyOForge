@@ -58,11 +58,57 @@ const PART_COPY_RULES = [
 
 function getPartCopy(id, name, purpose, significance) {
     const rule = PART_COPY_RULES.find(candidate => candidate.match.test(`${id} ${name}`));
-    if (rule) return rule;
+    const detailRules = [
+        { match: /inline-four/i, detail: 'Its four cylinders share one compact bank, usually favoring low mass and accessible packaging.' },
+        { match: /v6/i, detail: 'Its two cylinder banks balance smoothness, width, and power density for many road-car layouts.' },
+        { match: /v8/i, detail: 'Its paired cylinder banks deliver strong torque and a distinctive firing rhythm.' },
+        { match: /v10/i, detail: 'Its ten-cylinder layout trades complexity for high-revving power and a compact supercar character.' },
+        { match: /boxer|flat-six/i, detail: 'Its opposed cylinders keep the crankshaft center of gravity low and distribute primary forces naturally.' },
+        { match: /rotary/i, detail: 'Its spinning triangular rotor replaces reciprocating pistons, keeping the engine smooth and compact.' },
+        { match: /twin-turbo/i, detail: 'Two turbochargers divide the airflow demand, helping the system cover both response and peak output.' },
+        { match: /single turbo/i, detail: 'One exhaust-driven turbine and compressor keep the system lighter and simpler to package.' },
+        { match: /variable.*turbo/i, detail: 'Adjustable turbine vanes change the effective flow area as engine speed changes.' },
+        { match: /supercharger/i, detail: 'A mechanically driven compressor supplies boost directly from engine speed, avoiding exhaust-spool delay.' },
+        { match: /cold-air intake/i, detail: 'It moves the inlet opening away from engine-bay heat so denser air reaches the compressor or throttle.' },
+        { match: /intercooler/i, detail: 'A heat exchanger lowers compressed intake temperature before the air reaches the combustion chamber.' },
+        { match: /fuel injector/i, detail: 'A solenoid-controlled nozzle meters fuel into the intake or cylinder in timed pulses.' },
+        { match: /ecu|bms|inverter/i, detail: 'A control module turns sensor readings into switching, timing, and protection decisions.' },
+        { match: /manual/i, detail: 'A driver-selected gearset uses a clutch to connect engine speed to the final drive.' },
+        { match: /dual-clutch/i, detail: 'Two concentric clutches preselect the next ratio so shifts can happen with very little interruption.' },
+        { match: /differential/i, detail: 'Its gears let left and right wheels rotate at different speeds while still receiving torque.' },
+        { match: /radiator/i, detail: 'Coolant passes through finned tubes while road or fan airflow carries engine heat away.' },
+        { match: /coilover|damper/i, detail: 'A spring supports the chassis while a damper controls how quickly that spring can move.' },
+        { match: /sway bar/i, detail: 'A torsion bar links the suspension sides and resists unequal wheel movement during cornering.' },
+        { match: /tire|slick/i, detail: 'Its rubber compound and tread pattern determine how the contact patch behaves across temperature and weather.' },
+        { match: /brake|rotor|pad|caliper/i, detail: 'Friction between the pad and rotor turns kinetic energy into heat that the assembly must shed.' },
+        { match: /splitter|diffuser|spoiler|wing/i, detail: 'Its surface changes local pressure and airflow to tune stability without relying on engine power.' },
+        { match: /seat|harness|restraint|belt/i, detail: 'Its geometry positions and restrains the occupant so the safety systems can work as designed.' },
+        { match: /airbag/i, detail: 'A crash controller triggers a pyrotechnic inflator that fills a fabric cushion in milliseconds.' },
+        { match: /headlight|lamp|light|signal/i, detail: 'Its optics and light source shape visibility or communicate the vehicle\'s intent to others.' },
+        { match: /battery/i, detail: 'Electrochemical cells store energy and release it at the voltage and current the vehicle requires.' },
+        { match: /sensor|camera|radar|telemetry/i, detail: 'A sensing element converts a physical condition into data that another vehicle controller can interpret.' },
+        { match: /exhaust|header|muffler|resonator/i, detail: 'Its passages guide exhaust pulses while balancing gas speed, noise, heat, and emissions.' },
+        { match: /paint|wrap|coating|film/i, detail: 'Its surface layer changes reflectance, texture, or protection without changing the underlying structure.' },
+        { match: /tow|winch|recovery|jack/i, detail: 'Its load path is designed to move or support the vehicle during recovery rather than normal driving.' },
+        { match: /navigation|gps|carplay|screen/i, detail: 'It combines a display with position, map, or connected data so the driver can make an informed route choice.' }
+    ];
+    const detail = detailRules.find(candidate => candidate.match.test(`${id} ${name}`))?.detail;
+    if (rule) return { ...rule, detail };
     return {
         purpose: `${purpose} through a dedicated ${name.toLowerCase()} assembly`,
-        significance: `${significance}, with this component providing a more focused way to shape the final build`
+        significance: `${significance}, with this component providing a more focused way to shape the final build`,
+        detail
     };
+}
+
+function toResearchSlug(value) {
+    return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function getComponentImage(name, imageGroup, index) {
+    const query = encodeURIComponent(`${name} automotive component`);
+    const fallback = PART_IMAGE_POOLS[imageGroup][index % PART_IMAGE_POOLS[imageGroup].length];
+    return `https://loremflickr.com/700/500/${query}?lock=${index + 1}&fallback=${encodeURIComponent(fallback)}`;
 }
 
 function makePart(id, name, icon, imageGroup, purpose, significance, index) {
@@ -78,8 +124,10 @@ function makePart(id, name, icon, imageGroup, purpose, significance, index) {
         id,
         name,
         icon,
-        image: PART_IMAGE_POOLS[imageGroup][index % PART_IMAGE_POOLS[imageGroup].length],
-        description: `${name} ${copy.purpose}, with this choice emphasizing ${focus}.`,
+        image: getComponentImage(name, imageGroup, index),
+        reference: `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(name)}`,
+        imageSearch: `https://commons.wikimedia.org/wiki/Special:MediaSearch?type=image&search=${encodeURIComponent(name + ' automotive')}`,
+        description: `${name} ${copy.purpose}, with this choice emphasizing ${focus}.${copy.detail ? ` ${copy.detail}` : ''}`,
         significance: `${copy.significance}, especially when the build prioritizes ${focus}; the ${name.toLowerCase()} choice gives that priority its own hardware expression.`
     };
 }
@@ -1110,6 +1158,10 @@ function renderCarBuilder() {
                                             <div class="part-back">
                                                 <div class="part-description">${part.description}</div>
                                                 <div class="part-significance"><strong>Significance:</strong> ${part.significance}</div>
+                                                <div class="part-research-links">
+                                                    <a href="${part.reference}" target="_blank" rel="noreferrer">Research summary <i class="fas fa-external-link-alt"></i></a>
+                                                    <a href="${part.imageSearch}" target="_blank" rel="noreferrer">View component images <i class="fas fa-images"></i></a>
+                                                </div>
                                                 <button class="part-add-btn" onclick="addPartToCar('${part.id}', '${selectedCategory}')">
                                                     <i class="fas fa-plus"></i> Add Part
                                                 </button>

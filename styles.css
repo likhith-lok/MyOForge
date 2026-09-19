@@ -161,6 +161,9 @@ h1, h2, h3, h4 { line-height: 1.05; }
 .part-back { transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; background: var(--olive); }
 .part-description { font-size: .82rem; }
 .part-significance { border-top: 1px solid rgba(241,240,232,.25); padding-top: 12px; margin-top: 12px; color: #e7edcf; font-size: .75rem; }
+.part-research-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.part-research-links a { color: var(--acid); font: .62rem 'DM Mono', monospace; text-decoration: none; text-transform: uppercase; }
+.part-research-links a:hover { color: var(--paper); }
 .part-add-btn { margin-top: auto; padding: 10px; border: 0; background: var(--acid); color: var(--ink); cursor: pointer; font-weight: 800; }
 .preview-title { color: var(--acid); font: 500 .72rem 'DM Mono', monospace; text-transform: uppercase; }
 .car-preview { margin: 16px 0; aspect-ratio: 4/2.5; display: grid; place-items: center; background: linear-gradient(135deg, var(--olive), #3a452a); color: var(--acid); font-size: 4rem; }
