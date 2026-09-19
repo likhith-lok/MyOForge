@@ -9,7 +9,7 @@ MyoForge is a cutting-edge automotive customization platform that empowers users
 ## ✨ Features
 
 ### 🎯 Core Features
-- **Complete Vehicle Customization:** Modify every part - engines, suspension, body, interior, lighting, performance systems, exhaust, and paint
+- **Complete Vehicle Customization:** Explore 26 logical vehicle systems spanning powertrain, chassis, body, cabin, electronics, safety, EV hardware, utility, and track equipment
 - **Smart Role Selection:** Choose between "Beginner" and "Enthusiast" modes with personalized onboarding
 - **Multiple Car Builds:** Create unlimited custom cars and explore different build philosophies
 - **Real-Time Preview:** See your customizations instantly as you add or remove parts
@@ -29,31 +29,11 @@ MyoForge is a cutting-edge automotive customization platform that empowers users
 - Can skip guide at any time during the tour
 - Direct access to advanced customization features
 
-### 🚗 Customization Categories
+### 🚗 Customization Catalog
 
-1. **Engine & Drivetrain** (6 options)
-   - Turbocharged Engine, V8 Engine, Electric Motor, AWD System, Manual/Automatic Transmission
+The builder currently contains **26 systems and 260 components**, including engine variants, forced induction, fuel and ignition, transmissions, cooling and HVAC, suspension geometry, wheels and tires, brakes, steering, body panels, aerodynamics, glass and access, exterior details, seats and restraints, interior trim, controls, audio, lighting, electrical, safety, EV drive, exhaust, finish, cargo, maintenance, and competition equipment.
 
-2. **Suspension & Wheels** (6 options)
-   - Air Suspension, Coil Springs, Racing Slicks, All-Terrain Tires, Custom Wheels, Lowering Kits
-
-3. **Body & Exterior** (6 options)
-   - Carbon Fiber Hood, Widebody Kit, Custom Bumper, Spoiler, Custom Fender, Side Skirts
-
-4. **Interior** (6 options)
-   - Racing Seats, Leather Interior, Carbon Dashboard, Custom Steering Wheel, Ambient Lighting, Sound System
-
-5. **Lighting** (6 options)
-   - LED Headlights, Neon Underglow, RGB Tail Lights, LED Fog Lights, Custom Light Strips, Adaptive Headlights
-
-6. **Performance Systems** (6 options)
-   - Carbon Ceramic Brakes, Upgraded Brakes, Performance Radiator, Intercooler, Turbocharger, Supercharger
-
-7. **Exhaust System** (6 options)
-   - Twin Exhaust, Quad Exhaust, Custom Muffler, Turbo Back, Cat-back, Performance Headers
-
-8. **Paint & Wrap** (6 options)
-   - Matte Black, Pearl White, Metallic Red, Carbon Fiber Wrap, Custom Wrap, Chrome Trim
+Every component includes its own name, image assignment, function summary, significance note, and add/remove workflow.
 
 ### 🎨 Design Highlights
 - **Olive Green Studio Palette:** Acid green, brass, and deep olive create a distinctive configuration workspace

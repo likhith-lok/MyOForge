@@ -61,8 +61,8 @@ Your automotive customization platform is fully built, documented, and ready to 
 - Direct access to builder
 
 ### ✅ Car Customization
-- 8 major car categories
-- 48+ unique parts
+- 26 major car systems
+- 260 logical components
 - Real-time part preview
 - Add/remove parts dynamically
 - Car statistics tracking
@@ -163,7 +163,7 @@ Edit Existing or Create New → Build → Save
 
 ### Features
 - **Car Categories:** 8
-- **Parts Available:** 48+
+- **Parts Available:** 260
 - **Component Pages:** 6 (Landing, Onboarding, Guide, Garage, Builder, Auth)
 - **Animation Types:** 5+ (flip, fade, slide, zoom, pulse)
 - **Responsive Breakpoints:** 4

@@ -124,7 +124,7 @@ const CAR_PARTS = {
 };
 ```
 
-2. **Choose an appropriate category** (8 categories available)
+2. **Choose an appropriate category** (26 systems available)
 
 3. **Use a descriptive ID** in kebab-case: `'turbo-hybrid-engine'`
 

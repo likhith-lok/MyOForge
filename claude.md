@@ -25,18 +25,10 @@ MyoForge is a next-generation automotive customization platform enabling users t
 
 ### 3. Car Builder Interface
 - Support for multiple cars per user (create, edit, delete)
-- Major car sections as tabs/categories:
-  - Engine & Drivetrain
-  - Suspension & Wheels
-  - Body & Exterior
-  - Interior
-  - Lighting
-  - Performance Systems
-  - Exhaust
-  - Brakes & Cooling
+- Major car sections as tabs/categories: 26 logical systems with 260 components across powertrain, chassis, body, cabin, electronics, safety, EV, utility, maintenance, and competition equipment
 
 ### 4. Part Selection & Customization
-- Parts displayed as tiles with images
+- Parts displayed as tiles with component-specific image assignments
 - Clean, minimalistic hover animations (horizontal flip)
 - Part description appears on hover
 - Each part shows:

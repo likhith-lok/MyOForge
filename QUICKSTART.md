@@ -23,8 +23,8 @@ Click "Sign in with Gmail" button (simulated for demo)
 
 | Feature | Details |
 |---------|---------|
-| 🚗 Car Categories | 8 major sections |
-| 🔧 Parts Available | 48 unique parts |
+| 🚗 Car Categories | 26 major systems |
+| 🔧 Parts Available | 260 logical components |
 | 💾 Multiple Cars | Create unlimited builds |
 | 🎨 Customization | Every single part modifiable |
 | 📋 Real-time Preview | See changes instantly |
@@ -77,17 +77,17 @@ MyoForge features a sophisticated color scheme:
 
 ## 🔄 Car Parts Overview
 
-### 8 Customization Categories
+### 26 Customization Systems
 
 ```
-1. 🏎️ Engine & Drivetrain       (Turbos, V8s, Electric, AWD, Transmissions)
-2. 🔧 Suspension & Wheels        (Air suspension, Springs, Wheels, Lowering)
-3. 🚗 Body & Exterior            (Hoods, Widebody, Bumpers, Spoilers, Fenders)
-4. 🪑 Interior                   (Seats, Leather, Dashboard, Lighting, Sound)
-5. 💡 Lighting                   (LED, Neon, RGB, Fog Lights, Adaptive)
-6. ⚡ Performance Systems         (Brakes, Radiators, Turbo, Supercharger)
-7. 🔥 Exhaust System             (Twin, Quad, Mufflers, Headers, Turbback)
-8. 🎨 Paint & Wrap               (Colors, Carbon Fiber, Custom, Chrome)
+1. 🏎️ Powertrain                 (engine, intake, fuel, transmission, cooling)
+2. 🔧 Chassis                    (suspension, wheels, brakes, steering)
+3. 🚗 Body                       (panels, aero, glass, exterior details)
+4. 🪑 Cabin                      (seats, trim, controls, audio)
+5. ⚡ Electronics                 (lighting, batteries, EV drive, telemetry)
+6. 🛡️ Safety & Utility            (restraints, cargo, service, recovery)
+7. 🏁 Competition                (track hardware, data, pit and driver equipment)
+8. 🎨 Finish                     (paint, wraps, protection, trim)
 ```
 
 ## 💾 Your Data
@@ -101,7 +101,7 @@ All your cars and customizations are saved in your browser's localStorage. This 
 ## 🎓 Beginner Mode: 5-Step Guide
 
 1. **Create Your First Car** - Give your build a cool name
-2. **Choose a Category** - 8 major sections to customize
+2. **Choose a Category** - 26 major systems to customize
 3. **Select Parts** - Browse and add components to your car
 4. **Preview Your Build** - See everything in real-time
 5. **Save & Customize** - Keep refining your masterpiece
