@@ -127,14 +127,15 @@ function makePart(id, name, icon, imageGroup, purpose, significance, index) {
         image: getComponentImage(name, imageGroup, index),
         reference: `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(name)}`,
         imageSearch: `https://commons.wikimedia.org/wiki/Special:MediaSearch?type=image&search=${encodeURIComponent(name + ' automotive')}`,
-        description: `${name} ${copy.purpose}, with this choice emphasizing ${focus}.${copy.detail ? ` ${copy.detail}` : ''}`,
-        significance: `${copy.significance}, especially when the build prioritizes ${focus}; the ${name.toLowerCase()} choice gives that priority its own hardware expression.`
+        description: `${name} ${copy.purpose}, with this choice emphasizing ${focus}.${copy.detail ? ` ${copy.detail}` : ''}`
     };
 }
 
 function makeCategory(icon, imageGroup, purpose, significance, parts) {
     return {
         icon,
+        beginnerSignificance: `This area ${purpose}.`,
+        enthusiastSignificance: significance,
         parts: parts.map((part, index) => makePart(part[0], part[1], part[2], imageGroup, purpose, significance, index))
     };
 }
@@ -1141,6 +1142,7 @@ function renderCarBuilder() {
                                 <div>
                                     <div class="section-kicker">Active system</div>
                                     <h2>${selectedCategory}</h2>
+                                    <p class="section-significance">${userRole === 'beginner' ? CAR_PARTS[selectedCategory].beginnerSignificance : CAR_PARTS[selectedCategory].enthusiastSignificance}</p>
                                 </div>
                                 <span class="component-count">${categoryParts.length} components</span>
                             </div>
@@ -1157,11 +1159,6 @@ function renderCarBuilder() {
                                             </div>
                                             <div class="part-back">
                                                 <div class="part-description">${part.description}</div>
-                                                <div class="part-significance"><strong>Significance:</strong> ${part.significance}</div>
-                                                <div class="part-research-links">
-                                                    <a href="${part.reference}" target="_blank" rel="noreferrer">Research summary <i class="fas fa-external-link-alt"></i></a>
-                                                    <a href="${part.imageSearch}" target="_blank" rel="noreferrer">View component images <i class="fas fa-images"></i></a>
-                                                </div>
                                                 <button class="part-add-btn" onclick="addPartToCar('${part.id}', '${selectedCategory}')">
                                                     <i class="fas fa-plus"></i> Add Part
                                                 </button>
