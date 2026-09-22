@@ -853,8 +853,9 @@ function renderLandingPage() {
             <main class="landing-main">
                 <section class="landing-copy">
                     <div class="eyebrow">The anti-stock configurator</div>
+                    <div class="eyebrow">FOR YOU - BY YOU </div>
                     <h1>Build beyond <em>stock.</em></h1>
-                    <p class="lede">A tactile studio for making the car that exists in your head. Choose the systems, surfaces, and details that make it yours.</p>
+                    <p class="lede">A tactile studio for making the car that exists in your head. Choose the systems, surfaces, and <u>minutest</u> details that make it yours.</p>
                     <div class="landing-notes">
                         <div><strong>300</strong> component types</div>
                         <div><strong>∞</strong> build directions</div>
@@ -895,9 +896,9 @@ function renderLandingPage() {
             <section class="developer-section">
                 <div>
                     <div class="eyebrow">Behind the forge</div>
-                    <h2>Built by an independent developer.</h2>
+                    <h2>Built by a student.</h2>
                 </div>
-                <p>MyoForge is a personal experiment in making automotive knowledge feel tangible. It is designed to give curious people a place to ask “what if?” and turn that question into a considered build.</p>
+                <p>MyoForge is a personal experiment in making automotive knowledge feel tangible. It is designed to give curious people a place to ask “what if?” and turn that question into a considered build.<br></br>It is developed by a high school student with an aim to bring the car community together give them a way of expressing their wildest ideas.<br> </br> Open for collaboration - Contact me! <br> </br> <a href="mailto:likhith.lokanadham@outlook.com" style="color: white;">likhith.lokanadham@outlook.com</a></p>
             </section>
         </div>
     `;

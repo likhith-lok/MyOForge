@@ -6,9 +6,9 @@ MyoForge is a cutting-edge automotive customization platform that empowers users
 
 **Live Demo:** Open `index.html` in your browser
 
-## ✨ Features
+##  Features
 
-### 🎯 Core Features
+###  Core Features
 - **Complete Vehicle Customization:** Explore 30 logical vehicle systems spanning powertrain, chassis, body, cabin, electronics, safety, EV hardware, utility, recovery, and track equipment
 - **Smart Role Selection:** Choose between "Beginner" and "Enthusiast" modes with personalized onboarding
 - **Multiple Car Builds:** Create unlimited custom cars and explore different build philosophies
@@ -29,20 +29,20 @@ MyoForge is a cutting-edge automotive customization platform that empowers users
 - Can skip guide at any time during the tour
 - Direct access to advanced customization features
 
-### 🚗 Customization Catalog
+###  Customization Catalog
 
 The builder currently contains **30 systems and 300 components**, including engine variants, forced induction, fuel and ignition, transmissions, cooling and HVAC, suspension geometry, wheels and tires, brakes, steering, body panels, aerodynamics, glass and access, exterior details, seats and restraints, interior trim, controls, audio, lighting, electrical, safety, EV drive, exhaust, finish, cargo, maintenance, sensors, fluid routing, security, off-road recovery, and competition equipment.
 
 Every component includes its own name, image assignment, function summary, significance note, and add/remove workflow.
 
-### 🎨 Design Highlights
+###  Design Highlights
 - **Olive Green Studio Palette:** Acid green, brass, and deep olive create a distinctive configuration workspace
 - **Minimalistic Animations:** Smooth, clean interactions without jarring effects
 - **3D Flip Animation:** Parts reveal descriptions with elegant 180° horizontal flip on hover
 - **Responsive Design:** Works seamlessly on desktop, tablet, and mobile devices
 - **Dark Mode:** Eye-friendly interface optimized for extended use
 
-## 🏗️ Technical Architecture
+##  Technical Architecture
 
 ### Tech Stack
 - **Frontend:** Vanilla JavaScript with modern ES6+
@@ -62,7 +62,7 @@ MyoForge/
 └── README.md           # This file
 ```
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Quick Start
 1. Clone or download the repository
@@ -77,7 +77,7 @@ MyoForge/
 - Safari (latest)
 - Any modern browser with ES6+ support
 
-## 📝 User Workflows
+##  User Workflows
 
 ### New User (Beginner)
 ```
@@ -100,7 +100,7 @@ Create Car → Select Category → Browse Parts → Hover for Info → Click Add
 Preview Updates → Continue Customizing → Save Build
 ```
 
-## 🎮 Interaction Guide
+##  Interaction Guide
 
 ### Part Selection
 1. **Browse Categories:** Click tabs to switch between car sections
@@ -119,7 +119,7 @@ Preview Updates → Continue Customizing → Save Build
 2. **View Profile:** See email and account information
 3. **Logout:** Sign out and return to landing page
 
-## 🎨 Design System
+##  Design System
 
 ### Color Palette
 - **Primary Green:** `#556B2F` (Olive)
@@ -139,7 +139,7 @@ Preview Updates → Continue Customizing → Save Build
 - **Entrance:** fadeIn, fadeInDown, fadeInUp, slideInRight
 - **Performance:** GPU-optimized with transform and opacity
 
-## 💾 Data Persistence
+##  Data Persistence
 
 ### LocalStorage Structure
 ```javascript
@@ -163,7 +163,7 @@ Preview Updates → Continue Customizing → Save Build
 }
 ```
 
-## 🔄 Production Readiness
+##  Production Readiness
 
 ### Currently Simulated (Demo)
 - Gmail OAuth authentication
@@ -184,14 +184,14 @@ Preview Updates → Continue Customizing → Save Build
 - Export and sharing features
 - Part compatibility matrix
 
-## 📱 Responsive Breakpoints
+##  Responsive Breakpoints
 
 - **Desktop:** 1024px+
 - **Tablet:** 768px - 1023px
 - **Mobile:** 480px - 767px
 - **Small Mobile:** < 480px
 
-## ♿ Accessibility
+##  Accessibility
 
 - Semantic HTML structure
 - ARIA labels for interactive elements
@@ -200,18 +200,18 @@ Preview Updates → Continue Customizing → Save Build
 - Font scaling support
 - Focus indicators on buttons
 
-## 🐛 Known Limitations (Demo Version)
+##  Known Limitations (Demo Version)
 
 - Part images are icons (ready for real images)
 - Gmail login is simulated (ready for Firebase Auth)
 - No real 3D visualization (placeholder ready for Three.js)
 - LocalStorage only (scales to Firestore)
 
-## 📜 License
+##  License
 
 This project is licensed under the MIT License.
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Feel free to:
 1. Fork the repository
@@ -220,14 +220,13 @@ Contributions are welcome! Feel free to:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 🙏 Support
+##  Support
 
 For issues, questions, or suggestions, please open an issue on the GitHub repository.
 
-## 🌟 Vision
+##  Vision
 
 MyoForge aims to become the ultimate creative environment for automotive enthusiasts - a place where imagination meets engineering, enabling users to build the vehicles they envision without limitations.
 
 ---
 
-**Built with ❤️ for car enthusiasts**
