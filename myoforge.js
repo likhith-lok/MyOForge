@@ -1099,31 +1099,31 @@ function renderEnthusiastGuide() {
                 
                 <div class="guide-content">
                     <div class="guide-step">
-                        <div class="step-number">🔧</div>
+                        <div class="step-number"></div>
                         <h3>Unlimited Customization</h3>
                         <p>Explore ${partCount} components across the complete vehicle: power, structure, cabin, electronics, safety, utility, and competition systems.</p>
                     </div>
                     
                     <div class="guide-step">
-                        <div class="step-number">🎨</div>
+                        <div class="step-number"></div>
                         <h3>Smart Part Selection</h3>
                         <p>Hover over parts to instantly see descriptions and significance. Make informed choices about performance gains, aesthetic impact, and compatibility without confusion.</p>
                     </div>
                     
                     <div class="guide-step">
-                        <div class="step-number">🚗</div>
+                        <div class="step-number"></div>
                         <h3>Multiple Builds</h3>
                         <p>Create unlimited car builds and explore different philosophies. Build a track beast, a daily driver, a show car - all within the same platform.</p>
                     </div>
                     
                     <div class="guide-step">
-                        <div class="step-number">✨</div>
+                        <div class="step-number"></div>
                         <h3>Real-Time Preview</h3>
                         <p>See your customizations come together in real-time. The preview panel updates instantly as you add or remove parts.</p>
                     </div>
                     
                     <div class="guide-step">
-                        <div class="step-number">💾</div>
+                        <div class="step-number"</div>
                         <h3>Save & Iterate</h3>
                         <p>Save your builds anytime and come back to refine them. Experiment, evolve, and perfect your dream car at your own pace.</p>
                     </div>

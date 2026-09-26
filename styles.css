@@ -87,7 +87,7 @@ h1, h2, h3, h4 { line-height: 1.05; }
 .guide-header h1, .garage-header h1, .builder-header h1 { margin-top: 12px; font-size: clamp(2rem, 4vw, 4rem); letter-spacing: -.06em; }
 .guide-header p { color: var(--muted); margin-top: 12px; }
 .guide-content { display: grid; gap: 10px; }
-.guide-step { display: grid; grid-template-columns: 48px 1fr; gap: 18px; padding: 24px 0; border-top: 1px solid var(--line); }
+.guide-step { display: grid; gap: 18px; padding: 24px 0; border-top: 1px solid var(--line); }
 .guide-step { animation: guideStepIn 500ms cubic-bezier(.2,.8,.2,1) both; }
 .guide-step:nth-child(2) { animation-delay: 70ms; }
 .guide-step:nth-child(3) { animation-delay: 140ms; }
