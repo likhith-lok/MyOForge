@@ -404,7 +404,7 @@ This project demonstrates:
 - ✅ Git workflow
 - ✅ Documentation best practices
 
-## 🙏 Support & Next Steps
+##  Support & Next Steps
 
 ### Getting Help
 1. Check **README.md** for features
