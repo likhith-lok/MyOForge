@@ -8,17 +8,10 @@ MyoForge is a next-generation automotive customization platform enabling users t
 ### 1. Landing Page & Authentication
 - Olive, brass, and acid-green studio palette with grid texture
 - Gmail-style demo sign-in backed by localStorage; real OAuth requires project credentials
-- Role selection toggle: "Enthusiast" vs "Beginner" (changeable anytime)
-- Message indicating users can change their role later
+- Enthusiast-only access to the complete customization catalog
 - Responsive design
 
-### 2. User Role-Based Onboarding
-**Beginner Mode:**
-- Mini guide showing how to build a car
-- Option to skip/omit guide
-- Step-by-step walkthrough
-
-**Enthusiast Mode:**
+### 2. Enthusiast Onboarding
 - Two primary buttons: "I got this" and "Show me around"
 - "I got this" → Direct to car builder
 - "Show me around" → Interactive guide with skip option
@@ -143,18 +136,16 @@ MyoForge/
 - **Error/Alert:** #E74C3C
 
 ## User Workflow
-1. Land on homepage → Select role (Beginner/Enthusiast)
-2. If Beginner → Choose guide or skip
-3. If Enthusiast → Choose "I got this" or "Show me around"
-4. Access Car Garage → Create new car or edit existing
-5. Select major car section (tabs)
-6. Browse parts in that section (tiles with images)
-7. Hover on part → See flip animation + description
-8. Click part → Add to car
-9. Continue customizing until satisfied
-10. Save car to profile
-11. View 3D preview (future enhancement)
-12. Share with community (future enhancement)
+1. Sign in → Choose "I got this" or "Show me around"
+2. Access Car Garage → Create new car or edit existing
+3. Select major car section
+4. Browse parts in that section
+5. Hover on part → See description
+6. Click part → Add to car
+7. Continue customizing until satisfied
+8. Save car to profile
+9. View 3D preview (future enhancement)
+10. Share with community (future enhancement)
 
 ## Future Enhancements
 - 3D car visualization with Three.js
@@ -170,8 +161,8 @@ MyoForge/
 ## GitHub Commit Strategy
 After major features:
 - Initial setup: "initial: setup project structure and authentication"
-- Landing page: "feat: add landing page with role selection"
-- Onboarding: "feat: implement beginner/enthusiast onboarding"
+- Landing page: "feat: add enthusiast workshop entry"
+- Onboarding: "feat: implement optional enthusiast guide"
 - Car builder: "feat: build car customization interface"
 - Parts system: "feat: implement part selection with animations"
 - Bug fixes: "fix: [description]"

@@ -10,24 +10,18 @@ MyoForge is a cutting-edge automotive customization platform that empowers users
 
 ###  Core Features
 - **Complete Vehicle Customization:** Explore 30 logical vehicle systems spanning powertrain, chassis, body, cabin, electronics, safety, EV hardware, utility, recovery, and track equipment
-- **Smart Role Selection:** Choose between "Beginner" and "Enthusiast" modes with personalized onboarding
+- **Enthusiast Workshop:** Access the complete component catalog with optional guided onboarding
 - **Multiple Car Builds:** Create unlimited custom cars and explore different build philosophies
 - **Real-Time Preview:** See your customizations instantly as you add or remove parts
 - **Persistent Storage:** All builds are saved to your profile
 - **Gmail Entry:** Gmail-styled local demo sign-in; connect Firebase Google OAuth for production accounts
 
-### 👥 User Modes
+### 👥 Onboarding
 
-**Beginner Mode:**
-- Step-by-step guided tour with 5 comprehensive steps
-- Educational content explaining each customization phase
-- Option to skip and dive into building anytime
-- Perfect for newcomers to car customization
-
-**Enthusiast Mode:**
+- Choose between jumping straight into the garage or taking the optional guide
 - Two quick-start options: "I Got This" (skip guide) or "Show Me Around" (guided experience)
 - Can skip guide at any time during the tour
-- Direct access to advanced customization features
+- Direct access to the complete customization catalog
 
 ###  Customization Catalog
 
@@ -68,8 +62,8 @@ MyoForge/
 1. Clone or download the repository
 2. Open `index.html` in a modern web browser
 3. Sign in with Gmail (simulated)
-4. Select your role: Beginner or Enthusiast
-5. Follow the onboarding or jump straight to building
+4. Choose the quick start or optional guide
+5. Create a build and customize it
 
 ### Browser Requirements
 - Chrome/Edge (latest)
@@ -79,14 +73,9 @@ MyoForge/
 
 ##  User Workflows
 
-### New User (Beginner)
+### New User
 ```
-Landing Page → Select "Beginner" → View 5-Step Guide → Start Building
-```
-
-### New User (Enthusiast)
-```
-Landing Page → Select "Enthusiast" → Choose "I Got This" or "Show Me Around" → Build
+Landing Page → Sign In → Choose "I Got This" or "Show Me Around" → Build
 ```
 
 ### Returning User
@@ -115,8 +104,8 @@ Preview Updates → Continue Customizing → Save Build
 4. **Save:** Changes are auto-saved and persisted
 
 ### Profile Features
-1. **Change Role:** Switch between Beginner/Enthusiast modes anytime
-2. **View Profile:** See email and account information
+1. **View Profile:** See email and account information
+2. **Replay Guide:** Reopen the optional enthusiast tour
 3. **Logout:** Sign out and return to landing page
 
 ##  Design System
@@ -148,7 +137,7 @@ Preview Updates → Continue Customizing → Save Build
     id: string,
     email: string,
     name: string,
-    role: "beginner" | "enthusiast",
+    role: "enthusiast",
     preferences: { theme, notifications },
     cars: [
       {

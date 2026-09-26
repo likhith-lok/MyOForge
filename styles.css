@@ -55,12 +55,6 @@ h1, h2, h3, h4 { line-height: 1.05; }
 .developer-section { display: grid; grid-template-columns: .9fr 1.1fr; gap: 60px; padding: 78px 0 110px; border-top: 1px solid var(--line); }
 .developer-section h2 { margin-top: 16px; font-size: clamp(2rem, 4vw, 3.8rem); letter-spacing: -.06em; }
 .developer-section p { max-width: 540px; color: var(--muted); font-size: 1rem; }
-.role-toggle-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 26px 0 14px; }
-.role-btn { border: 1px solid var(--line); background: transparent; color: var(--muted); padding: 15px 10px; cursor: pointer; transition: var(--ease); }
-.role-btn.active, .role-btn:hover { background: var(--acid); color: var(--ink); border-color: var(--acid); }
-.role-btn i { margin-right: 6px; }
-.role-info { color: var(--muted); font-size: .78rem; padding: 12px 0 22px; }
-.role-info i { color: var(--brass); margin-right: 6px; }
 .get-started-btn, .action-btn, .create-car-btn, .builder-btn, .auth-btn { border: 0; cursor: pointer; font-weight: 800; transition: var(--ease); }
 .get-started-btn { width: 100%; padding: 16px; background: var(--brass); color: var(--ink); text-transform: uppercase; letter-spacing: .08em; }
 .get-started-btn:hover, .action-btn:hover, .create-car-btn:hover { background: var(--acid); transform: translateY(-2px); }
@@ -206,20 +200,25 @@ h1, h2, h3, h4 { line-height: 1.05; }
 .create-car-modal label { display: block; margin-top: 22px; color: var(--acid); font: .68rem 'DM Mono', monospace; text-transform: uppercase; }
 .create-car-modal input { width: 100%; margin-top: 8px; padding: 12px; border: 1px solid var(--line); background: var(--ink); color: var(--paper); }
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
-.message { position: fixed; left: 50%; top: 22px; z-index: 10; transform: translateX(-50%); padding: 12px 18px; background: var(--acid); color: var(--ink); font-size: .82rem; box-shadow: 0 10px 24px rgba(0,0,0,.25); animation: riseIn 200ms ease both; }
-.mode-control { display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--line); background: rgba(16,22,18,.45); }
-.mode-control > span { padding: 0 6px; color: var(--muted); font: .62rem 'DM Mono', monospace; text-transform: uppercase; }
-.mode-btn { border: 0; padding: 7px 9px; background: transparent; color: var(--muted); cursor: pointer; font-size: .7rem; font-weight: 800; }
-.mode-btn:hover, .mode-btn.active { background: var(--acid); color: var(--ink); }
-.dropdown-role-control { padding: 8px 10px; border-bottom: 1px solid var(--line); }
-.dropdown-role-control .mode-control { justify-content: center; }
-
+.message-host { position: fixed; top: 16px; right: 16px; z-index: 1000; display: grid; gap: 9px; width: min(420px, calc(100vw - 32px)); pointer-events: none; }
+.message { display: flex; align-items: center; gap: 11px; min-height: 48px; padding: 12px 15px; border: 1px solid var(--line); border-left: 4px solid var(--acid); background: var(--panel); color: var(--paper); font-size: .82rem; line-height: 1.4; box-shadow: 0 12px 30px rgba(0,0,0,.42); animation: toastIn 220ms ease both; }
+.message i { flex: 0 0 auto; color: var(--acid); }
+.message.success { border-left-color: var(--acid); }
+.message.error { border-left-color: var(--danger); }
+.message.error i { color: var(--danger); }
+.message.warning { border-left-color: var(--brass); }
+.message.warning i { color: var(--brass); }
+.message.info { border-left-color: var(--olive-bright); }
+.message.info i { color: var(--olive-bright); }
+.message.is-leaving { animation: toastOut 250ms ease both; }
 @keyframes riseIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toastIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(14px); } }
 @keyframes guideStepIn { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes machineIn { from { opacity: 0; transform: translateX(35px); } to { opacity: .92; transform: translateX(0); } }
 @media (max-width: 1100px) { .builder-content { grid-template-columns: 210px minmax(0, 1fr); } .car-preview-section { grid-column: 1 / -1; grid-row: 2; position: static; } }
 @media (max-width: 900px) { .landing-main { grid-template-columns: 1fr; gap: 30px; padding-top: 40px; } .hero-machine { min-height: 340px; order: -1; } .hero-machine img { width: 90%; } .builder-content { grid-template-columns: 190px minmax(0, 1fr); } }
-@media (max-width: 600px) { .site-nav, .landing-main, .landing-lower, .developer-section { width: min(100% - 32px, 1240px); } .nav-meta { display: none; } .landing-copy h1 { font-size: 3.3rem; } .landing-notes { gap: 14px; flex-wrap: wrap; } .entry-panel { padding: 22px; } .landing-feature-grid, .developer-section { grid-template-columns: 1fr; } .developer-section { gap: 24px; } .app-header { align-items: flex-start; flex-wrap: wrap; padding: 12px 16px; } .app-header-meta { order: 3; flex-basis: 100%; } .app-header-actions { margin-left: auto; } .app-header-actions .mode-control { width: auto; } .onboarding-guide, .car-garage, .car-builder { padding: 24px 16px; } .garage-header, .builder-header { align-items: start; flex-direction: column; } .garage-actions, .builder-actions { width: 100%; justify-content: flex-start; } .builder-btn { flex: 1; } .builder-content { grid-template-columns: 1fr; } .category-sidebar { position: static; max-height: 320px; } .category-sidebar.collapsed { width: 100%; max-height: 64px; } .car-preview-section { grid-column: auto; grid-row: auto; } .guide-navigation, .enthusiast-buttons { align-items: stretch; flex-direction: column; } .guide-nav-btn, .action-btn { width: 100%; text-align: center; } .mode-control { width: 100%; justify-content: center; } }
+@media (max-width: 600px) { .site-nav, .landing-main, .landing-lower, .developer-section { width: min(100% - 32px, 1240px); } .nav-meta { display: none; } .landing-copy h1 { font-size: 3.3rem; } .landing-notes { gap: 14px; flex-wrap: wrap; } .entry-panel { padding: 22px; } .landing-feature-grid, .developer-section { grid-template-columns: 1fr; } .developer-section { gap: 24px; } .app-header { align-items: flex-start; flex-wrap: wrap; padding: 12px 16px; } .app-header-meta { order: 3; flex-basis: 100%; } .app-header-actions { margin-left: auto; } .onboarding-guide, .car-garage, .car-builder { padding: 24px 16px; } .garage-header, .builder-header { align-items: start; flex-direction: column; } .garage-actions, .builder-actions { width: 100%; justify-content: flex-start; } .builder-btn { flex: 1; } .builder-content { grid-template-columns: 1fr; } .category-sidebar { position: static; max-height: 320px; } .category-sidebar.collapsed { width: 100%; max-height: 64px; } .car-preview-section { grid-column: auto; grid-row: auto; } .guide-navigation, .enthusiast-buttons { align-items: stretch; flex-direction: column; } .guide-nav-btn, .action-btn { width: 100%; text-align: center; } }
 @media (max-width: 600px) {
     .workspace-heading { align-items: stretch; flex-direction: column; }
     .system-filter select { width: 100%; max-width: none; }

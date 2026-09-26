@@ -35,7 +35,7 @@ Your automotive customization platform is fully built, documented, and ready to 
 
 ### ✅ Landing Page
 - Olive green theme with gradient backgrounds
-- Role selection toggle (Beginner/Enthusiast)
+- Enthusiast-only workshop with optional onboarding guide
 - Information about changing role in future
 - Gmail OAuth-style authentication
 - Professional, modern design
@@ -46,13 +46,6 @@ Your automotive customization platform is fully built, documented, and ready to 
 - Role management
 - Logout functionality
 - Session persistence
-
-### ✅ Beginner Onboarding
-- 5-step guided tutorial
-- Step-by-step explanation of features
-- Skip option on guide
-- Navigation controls
-- Progress indicator
 
 ### ✅ Enthusiast Onboarding
 - Quick-start options: "I Got This" & "Show Me Around"
@@ -123,9 +116,8 @@ Your automotive customization platform is fully built, documented, and ready to 
 ### Quick Start (30 seconds)
 1. Open `index.html` in your browser
 2. Click "Sign in with Gmail"
-3. Select role: Beginner or Enthusiast
-4. Click "Get Started"
-5. Follow guide or jump to car builder
+3. Choose the quick start or optional guide
+4. Create a build in the garage
 6. Browse parts, hover to see details
 7. Click to add parts to your car
 8. Save your build
@@ -176,22 +168,9 @@ Edit Existing or Create New → Build → Save
 
 ## 🎯 User Journeys
 
-### New User (Beginner)
+### New User
 ```
-1. Landing Page (Role Selection)
-   ↓
-2. Beginner Guide (5 Steps)
-   ↓
-3. Car Garage (Create First Car)
-   ↓
-4. Car Builder (Add Parts)
-   ↓
-5. Save & Customize
-```
-
-### New User (Enthusiast)
-```
-1. Landing Page (Role Selection)
+1. Landing Page
    ↓
 2. Quick Start Choice
    ├─ "I Got This" → Direct to Builder
@@ -219,7 +198,7 @@ Edit Existing or Create New → Build → Save
   id: "unique-id",
   email: "user@gmail.com",
   name: "Display Name",
-  role: "beginner" | "enthusiast",
+   role: "enthusiast",
   preferences: { theme, notifications },
   cars: [...]
 }
@@ -362,8 +341,7 @@ Edit Existing or Create New → Build → Save
 ### Testing Coverage
 - ✅ Landing page functionality
 - ✅ Authentication flow
-- ✅ Role selection working
-- ✅ Onboarding guides complete
+- ✅ Enthusiast onboarding options working
 - ✅ Car creation working
 - ✅ Part selection functional
 - ✅ Data persistence verified

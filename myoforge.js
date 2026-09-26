@@ -134,7 +134,6 @@ function makePart(id, name, icon, imageGroup, purpose, significance, index) {
 function makeCategory(icon, imageGroup, purpose, significance, parts) {
     return {
         icon,
-        beginnerSignificance: `This area ${purpose}.`,
         enthusiastSignificance: significance,
         parts: parts.map((part, index) => makePart(part[0], part[1], part[2], imageGroup, purpose, significance, index))
     };
@@ -245,24 +244,12 @@ const LEGACY_CATEGORY_ALIASES = {
     'Paint & Wrap': 'Paint, Wrap & Finish'
 };
 
-const BEGINNER_CATEGORY_KEYS = [
-    'Engine Core',
-    'Wheels & Tires',
-    'Suspension Geometry',
-    'Braking Hardware',
-    'Body Panels',
-    'Interior Trim & Comfort',
-    'Exterior Lighting',
-    'Safety Systems'
-];
-
 function getVisibleCategories() {
-    return userRole === 'beginner' ? BEGINNER_CATEGORY_KEYS : Object.keys(CAR_PARTS);
+    return Object.keys(CAR_PARTS);
 }
 
 function getVisibleParts(category) {
-    const parts = CAR_PARTS[category]?.parts || [];
-    return userRole === 'beginner' ? parts.slice(0, 5) : parts;
+    return CAR_PARTS[category]?.parts || [];
 }
 /*
     'Engine & Drivetrain': {
@@ -647,7 +634,6 @@ function getVisibleParts(category) {
 
 // Application State
 let currentUser = null;
-let userRole = null;
 let userPreferences = {};
 let userCars = [];
 let currentCarId = null;
@@ -656,13 +642,50 @@ let catalogSearchQuery = '';
 let catalogInstallFilter = 'all';
 
 const VEHICLE_CATALOG = {
-    Toyota: { 'Corolla': 'combustion', 'Prius': 'hybrid' },
-    Ford: { 'Mustang': 'combustion', 'Mustang Mach-E': 'electric', 'F-150': 'combustion' },
-    Tesla: { 'Model 3': 'electric', 'Model Y': 'electric' },
-    Porsche: { '911': 'combustion', 'Taycan': 'electric' }
+    Acura: { 'Integra': 'combustion', 'MDX': 'combustion', 'NSX': 'hybrid', 'RDX': 'combustion', 'TLX': 'combustion' },
+    'Aston Martin': { 'DB12': 'combustion', 'DBX': 'combustion', 'Vantage': 'combustion' },
+    Audi: { 'A3': 'combustion', 'A4': 'combustion', 'A6': 'combustion', 'Q5': 'combustion', 'Q7': 'combustion', 'R8': 'combustion', 'e-tron GT': 'electric' },
+    Bentley: { 'Bentayga': 'combustion', 'Continental GT': 'hybrid', 'Flying Spur': 'hybrid' },
+    BMW: { '2 Series': 'combustion', '3 Series': 'combustion', '5 Series': 'hybrid', '7 Series': 'hybrid', 'M2': 'combustion', 'M3': 'combustion', 'M4': 'combustion', 'X3': 'combustion', 'X5': 'hybrid', 'i4': 'electric', 'i5': 'electric', 'iX': 'electric' },
+    Buick: { 'Enclave': 'combustion', 'Encore GX': 'combustion', 'Envista': 'combustion' },
+    Cadillac: { 'CT4': 'combustion', 'CT5': 'combustion', 'Escalade': 'combustion', 'Lyriq': 'electric', 'Optiq': 'electric' },
+    Chevrolet: { 'Blazer': 'combustion', 'Blazer EV': 'electric', 'Camaro': 'combustion', 'Colorado': 'combustion', 'Corvette': 'combustion', 'Equinox': 'combustion', 'Equinox EV': 'electric', 'Silverado': 'combustion', 'Silverado EV': 'electric', 'Tahoe': 'combustion', 'Trax': 'combustion' },
+    Chrysler: { 'Pacifica': 'hybrid', '300': 'combustion' },
+    Dodge: { 'Challenger': 'combustion', 'Charger': 'combustion', 'Durango': 'combustion', 'Hornet': 'hybrid' },
+    Ferrari: { '296 GTB': 'hybrid', '12Cilindri': 'combustion', 'Purosangue': 'combustion', 'SF90 Stradale': 'hybrid' },
+    Fiat: { '500e': 'electric', '500X': 'combustion' },
+    Ford: { 'Bronco': 'combustion', 'Bronco Sport': 'combustion', 'Escape': 'hybrid', 'Explorer': 'hybrid', 'F-150': 'combustion', 'Maverick': 'hybrid', 'Mustang': 'combustion', 'Mustang Mach-E': 'electric', 'Ranger': 'combustion', 'Transit': 'combustion' },
+    Genesis: { 'G70': 'combustion', 'G80': 'electric', 'GV70': 'combustion', 'GV60': 'electric', 'GV80': 'combustion' },
+    GMC: { 'Acadia': 'combustion', 'Canyon': 'combustion', 'Hummer EV': 'electric', 'Sierra': 'combustion', 'Terrain': 'combustion', 'Yukon': 'combustion' },
+    Honda: { 'Accord': 'hybrid', 'Civic': 'combustion', 'CR-V': 'hybrid', 'HR-V': 'combustion', 'Odyssey': 'combustion', 'Pilot': 'combustion', 'Prelude': 'hybrid', 'Prologue': 'electric' },
+    Hyundai: { 'Elantra': 'hybrid', 'Ioniq 5': 'electric', 'Ioniq 6': 'electric', 'Kona': 'electric', 'Palisade': 'combustion', 'Santa Fe': 'hybrid', 'Sonata': 'hybrid', 'Tucson': 'hybrid' },
+    Infiniti: { 'Q50': 'combustion', 'QX50': 'combustion', 'QX60': 'combustion', 'QX80': 'combustion' },
+    Jaguar: { 'F-Pace': 'combustion', 'F-Type': 'combustion', 'I-Pace': 'electric', 'XF': 'combustion' },
+    Jeep: { 'Cherokee': 'combustion', 'Gladiator': 'combustion', 'Grand Cherokee': 'hybrid', 'Grand Wagoneer': 'combustion', 'Wrangler': 'hybrid', 'Wagoneer S': 'electric' },
+    Kia: { 'Carnival': 'combustion', 'EV6': 'electric', 'EV9': 'electric', 'Forte': 'combustion', 'K5': 'combustion', 'Niro': 'hybrid', 'Sportage': 'hybrid', 'Telluride': 'combustion' },
+    Lamborghini: { 'Huracan': 'combustion', 'Revuelto': 'hybrid', 'Urus': 'hybrid', 'Temerario': 'hybrid' },
+    'Land Rover': { 'Defender': 'hybrid', 'Discovery': 'hybrid', 'Range Rover': 'hybrid', 'Range Rover Sport': 'hybrid', 'Range Rover Velar': 'hybrid' },
+    Lexus: { 'ES': 'hybrid', 'GX': 'combustion', 'IS': 'combustion', 'LC': 'hybrid', 'LX': 'hybrid', 'NX': 'hybrid', 'RX': 'hybrid', 'RZ': 'electric', 'UX': 'hybrid' },
+    Lucid: { 'Air': 'electric', 'Gravity': 'electric' },
+    Maserati: { 'Grecale': 'hybrid', 'GranTurismo': 'combustion', 'GranCabrio Folgore': 'electric', 'MC20': 'combustion' },
+    Mazda: { 'CX-30': 'combustion', 'CX-5': 'combustion', 'CX-50': 'hybrid', 'CX-70': 'hybrid', 'CX-90': 'hybrid', 'Mazda3': 'combustion', 'MX-5 Miata': 'combustion' },
+    McLaren: { '750S': 'combustion', 'Artura': 'hybrid', 'GTS': 'combustion' },
+    'Mercedes-Benz': { 'A-Class': 'combustion', 'C-Class': 'hybrid', 'E-Class': 'hybrid', 'G-Class': 'combustion', 'GLC': 'hybrid', 'GLE': 'hybrid', 'S-Class': 'hybrid', 'AMG GT': 'hybrid', 'EQS': 'electric', 'EQE': 'electric' },
+    Mini: { 'Cooper': 'combustion', 'Countryman': 'electric', 'John Cooper Works': 'combustion' },
+    Mitsubishi: { 'Eclipse Cross': 'combustion', 'Outlander': 'hybrid' },
+    Nissan: { 'Altima': 'combustion', 'Ariya': 'electric', 'Frontier': 'combustion', 'Leaf': 'electric', 'Pathfinder': 'combustion', 'Rogue': 'combustion', 'Sentra': 'combustion', 'Z': 'combustion' },
+    Polestar: { '2': 'electric', '3': 'electric', '4': 'electric' },
+    Porsche: { '718 Cayman': 'combustion', '911': 'combustion', 'Cayenne': 'hybrid', 'Macan': 'electric', 'Panamera': 'hybrid', 'Taycan': 'electric' },
+    Ram: { '1500': 'hybrid', '2500': 'combustion', '3500': 'combustion', 'ProMaster': 'combustion' },
+    Rivian: { 'R1S': 'electric', 'R1T': 'electric', 'R2': 'electric', 'EDV': 'electric' },
+    Subaru: { 'BRZ': 'combustion', 'Crosstrek': 'hybrid', 'Forester': 'hybrid', 'Impreza': 'combustion', 'Outback': 'combustion', 'Solterra': 'electric', 'WRX': 'combustion' },
+    Tesla: { 'Model 3': 'electric', 'Model S': 'electric', 'Model X': 'electric', 'Model Y': 'electric', 'Cybertruck': 'electric' },
+    Toyota: { '4Runner': 'hybrid', 'Camry': 'hybrid', 'Corolla': 'hybrid', 'Crown': 'hybrid', 'GR86': 'combustion', 'GR Corolla': 'combustion', 'GR Supra': 'combustion', 'Highlander': 'hybrid', 'Land Cruiser': 'hybrid', 'Prius': 'hybrid', 'RAV4': 'hybrid', 'Tacoma': 'hybrid', 'Tundra': 'hybrid' },
+    Volkswagen: { 'Atlas': 'combustion', 'Golf GTI': 'combustion', 'Golf R': 'combustion', 'ID.4': 'electric', 'ID. Buzz': 'electric', 'Jetta': 'combustion', 'Tiguan': 'combustion' },
+    Volvo: { 'EX30': 'electric', 'EX90': 'electric', 'S60': 'hybrid', 'V60': 'hybrid', 'XC60': 'hybrid', 'XC90': 'hybrid' }
 };
 
-const VEHICLE_YEARS = Array.from({ length: 27 }, (_, index) => 2000 + index);
+const VEHICLE_YEARS = Array.from({ length: new Date().getFullYear() - 1989 }, (_, index) => 1990 + index);
 const UNIVERSAL_PART_IDS = new Set([
     'paint-matte-black', 'paint-pearl-white', 'paint-metallic-red', 'paint-chameleon',
     'paint-satin-green', 'wrap-carbon', 'wrap-printed', 'ceramic-coating'
@@ -731,8 +754,10 @@ const firebaseConfig = {
 function saveToLocalStorage(key, data) {
     try {
         localStorage.setItem(key, JSON.stringify(data));
+        return true;
     } catch (e) {
         console.error('localStorage save failed:', e);
+        return false;
     }
 }
 
@@ -751,14 +776,30 @@ function generateId() {
 }
 
 function showMessage(text, type = 'info') {
+    let host = document.getElementById('messageHost');
+    if (!host) {
+        host = document.createElement('div');
+        host.id = 'messageHost';
+        host.className = 'message-host';
+        host.setAttribute('aria-label', 'Notifications');
+        document.body.appendChild(host);
+    }
+
     const message = document.createElement('div');
-    message.className = `message ${type}`;
-    message.textContent = text;
-    const root = document.getElementById('root');
-    root.insertBefore(message, root.firstChild);
-    
-    setTimeout(() => {
-        message.remove();
+    const messageTypes = ['success', 'error', 'warning', 'info'];
+    const safeType = messageTypes.includes(type) ? type : 'info';
+    const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', warning: 'fa-triangle-exclamation', info: 'fa-circle-info' };
+    message.className = `message ${safeType}`;
+    message.setAttribute('role', safeType === 'error' || safeType === 'warning' ? 'alert' : 'status');
+    message.setAttribute('aria-live', safeType === 'error' || safeType === 'warning' ? 'assertive' : 'polite');
+    message.innerHTML = `<i class="fas ${icons[safeType]}" aria-hidden="true"></i><span></span>`;
+    message.querySelector('span').textContent = text;
+    host.appendChild(message);
+
+    window.setTimeout(() => {
+        message.classList.add('is-leaving');
+        message.addEventListener('animationend', () => message.remove(), { once: true });
+        window.setTimeout(() => message.remove(), 350);
     }, 4000);
 }
 
@@ -767,9 +808,10 @@ function initAuth() {
     const savedUser = getFromLocalStorage('myoforge_user');
     if (savedUser) {
         currentUser = savedUser;
-        userRole = savedUser.role;
+        currentUser.role = 'enthusiast';
         userPreferences = savedUser.preferences || {};
         userCars = savedUser.cars || [];
+        saveToLocalStorage('myoforge_user', currentUser);
     }
 }
 
@@ -779,7 +821,7 @@ function simulateGmailLogin() {
         id: generateId(),
         email: 'user' + Math.floor(Math.random() * 10000) + '@gmail.com',
         name: 'Car Enthusiast',
-        role: null,
+        role: 'enthusiast',
         preferences: {
             theme: 'dark',
             notifications: true
@@ -788,31 +830,20 @@ function simulateGmailLogin() {
     };
     
     currentUser = user;
-    saveToLocalStorage('myoforge_user', user);
-    showMessage('Successfully logged in with Gmail!', 'success');
+    const saved = saveToLocalStorage('myoforge_user', user);
+    showMessage(saved ? 'Successfully logged in with Gmail!' : 'Signed in, but this browser could not save your profile.', saved ? 'success' : 'warning');
     return user;
 }
 
 function logout() {
     currentUser = null;
-    userRole = null;
     userCars = [];
     localStorage.removeItem('myoforge_user');
     showMessage('Logged out successfully', 'info');
     render();
 }
 
-// Role Selection
-function setUserRole(role) {
-    userRole = role;
-    if (currentUser) {
-        currentUser.role = role;
-        saveToLocalStorage('myoforge_user', currentUser);
-    }
-    showMessage(`Role set to ${role}`, 'success');
-    render();
-}
-
+// Onboarding Entry
 // Car Management
 function createNewCar(carName) {
     const newCar = {
@@ -827,12 +858,13 @@ function createNewCar(carName) {
     userCars.push(newCar);
     currentCarId = newCar.id;
     
+    let saved = true;
     if (currentUser) {
         currentUser.cars = userCars;
-        saveToLocalStorage('myoforge_user', currentUser);
+        saved = saveToLocalStorage('myoforge_user', currentUser);
     }
     
-    showMessage(`Car "${newCar.name}" created!`, 'success');
+    showMessage(saved ? `Car "${newCar.name}" created!` : `Car "${newCar.name}" created, but could not be saved in this browser.`, saved ? 'success' : 'warning');
     return newCar;
 }
 
@@ -842,12 +874,13 @@ function deleteCar(carId) {
         currentCarId = null;
     }
     
+    let saved = true;
     if (currentUser) {
         currentUser.cars = userCars;
-        saveToLocalStorage('myoforge_user', currentUser);
+        saved = saveToLocalStorage('myoforge_user', currentUser);
     }
     
-    showMessage('Car deleted', 'info');
+    showMessage(saved ? 'Car deleted' : 'Car deleted for this session, but the change could not be saved.', saved ? 'info' : 'warning');
     render();
 }
 
@@ -857,7 +890,10 @@ function getCurrentCar() {
 
 function addPartToCar(partId, category) {
     const car = getCurrentCar();
-    if (!car) return;
+    if (!car) {
+        showMessage('Open a build before adding parts.', 'warning');
+        return;
+    }
     
     const parts = CAR_PARTS[category].parts;
     const part = parts.find(p => p.id === partId);
@@ -873,37 +909,48 @@ function addPartToCar(partId, category) {
         }
         car.parts[category].push(part);
         
+        let saved = true;
         if (currentUser) {
             currentUser.cars = userCars;
-            saveToLocalStorage('myoforge_user', currentUser);
+            saved = saveToLocalStorage('myoforge_user', currentUser);
         }
         
-        showMessage(`Added ${part.name} to your car!`, 'success');
+        showMessage(saved ? `Added ${part.name} to your car!` : `${part.name} was added for this session, but the change could not be saved.`, saved ? 'success' : 'warning');
         render();
     }
 }
 
 function removePartFromCar(partIndex, category) {
     const car = getCurrentCar();
-    if (car && car.parts[category]) {
-        car.parts[category].splice(partIndex, 1);
-        
-        if (currentUser) {
-            currentUser.cars = userCars;
-            saveToLocalStorage('myoforge_user', currentUser);
-        }
-        
-        showMessage('Part removed', 'info');
-        render();
+    if (!car) {
+        showMessage('Open a build before removing parts.', 'warning');
+        return;
     }
+    if (!car.parts[category]?.[partIndex]) {
+        showMessage('That part is no longer in this build.', 'warning');
+        return;
+    }
+
+    car.parts[category].splice(partIndex, 1);
+
+    let saved = true;
+    if (currentUser) {
+        currentUser.cars = userCars;
+        saved = saveToLocalStorage('myoforge_user', currentUser);
+    }
+
+    showMessage(saved ? 'Part removed' : 'Part removed for this session, but the change could not be saved.', saved ? 'info' : 'warning');
+    render();
 }
 
 function saveCar() {
-    if (currentUser) {
-        currentUser.cars = userCars;
-        saveToLocalStorage('myoforge_user', currentUser);
+    if (!currentUser) {
+        showMessage('Sign in before saving your build.', 'error');
+        return;
     }
-    showMessage('Car saved successfully!', 'success');
+    currentUser.cars = userCars;
+    const saved = saveToLocalStorage('myoforge_user', currentUser);
+    showMessage(saved ? 'Car saved successfully!' : 'Could not save this car in browser storage. Check available storage and try again.', saved ? 'success' : 'error');
 }
 
 function updateVehicleSelection(field, value) {
@@ -912,10 +959,12 @@ function updateVehicleSelection(field, value) {
     car.vehicle = car.vehicle || { make: '', model: '', year: '' };
     car.vehicle[field] = value;
     if (field === 'make') car.vehicle.model = '';
+    let saved = true;
     if (currentUser) {
         currentUser.cars = userCars;
-        saveToLocalStorage('myoforge_user', currentUser);
+        saved = saveToLocalStorage('myoforge_user', currentUser);
     }
+    if (!saved) showMessage('Vehicle selection changed, but could not be saved in this browser.', 'warning');
     render('builder');
 }
 
@@ -923,14 +972,16 @@ function updateBuildColor(color) {
     const car = getCurrentCar();
     if (!car) return;
     car.color = color;
+    let saved = true;
     if (currentUser) {
         currentUser.cars = userCars;
-        saveToLocalStorage('myoforge_user', currentUser);
+        saved = saveToLocalStorage('myoforge_user', currentUser);
     }
     const preview = document.querySelector('.car-preview');
     if (preview) preview.style.setProperty('--build-color', color);
     const colorValue = document.getElementById('buildColorValue');
     if (colorValue) colorValue.textContent = color.toUpperCase();
+    if (!saved) showMessage('Body color changed, but could not be saved in this browser.', 'warning');
 }
 
 function filterPartsCatalog() {
@@ -981,15 +1032,9 @@ function renderLandingPage() {
                 </section>
 
                 <section class="entry-panel">
-                    <div class="section-kicker">Start a private build</div>
-                    <h2>How do you want to enter?</h2>
-                    <p>Pick a pace. You can change this preference from your profile whenever your confidence catches up with your curiosity.</p>
-
-                    <div class="role-toggle-container">
-                        <button class="role-btn ${!userRole || userRole === 'beginner' ? 'active' : ''}" onclick="setUserRole('beginner')"><i class="fas fa-compass"></i> Beginner</button>
-                        <button class="role-btn ${userRole === 'enthusiast' ? 'active' : ''}" onclick="setUserRole('enthusiast')"><i class="fas fa-bolt"></i> Enthusiast</button>
-                    </div>
-                    <div class="role-info"><i class="fas fa-sliders-h"></i> Your role is a starting point, never a lock-in.</div>
+                    <div class="section-kicker">Enthusiast workshop</div>
+                    <h2>Start your build.</h2>
+                    <p>Jump straight into the full vehicle catalog or take a quick tour first.</p>
                     <button class="get-started-btn" onclick="${signedIn ? "render('garage')" : 'proceedFromLanding()'}">${signedIn ? 'Enter My Garage' : 'Sign in with Gmail'} <i class="fas fa-arrow-right"></i></button>
                 </section>
             </div>
@@ -1001,7 +1046,7 @@ function renderLandingPage() {
                 </div>
                 <div class="landing-feature-grid">
                     <article><i class="fas fa-layer-group"></i><h3>Every layer matters</h3><p>Explore powertrain, structure, cabin, electronics, safety, utility, and finish in one calm workspace.</p></article>
-                    <article><i class="fas fa-book-open"></i><h3>Learn as you build</h3><p>Beginner mode keeps the first decisions approachable. Enthusiast mode opens the full workshop.</p></article>
+                    <article><i class="fas fa-book-open"></i><h3>Explore the full catalog</h3><p>Move freely across powertrain, structure, cabin, electronics, safety, utility, and competition systems.</p></article>
                     <article><i class="fas fa-floppy-disk"></i><h3>Your garage, your directions</h3><p>Keep multiple ideas alive locally and return to any build when the next idea arrives.</p></article>
                 </div>
             </section>
@@ -1012,61 +1057,6 @@ function renderLandingPage() {
                 </div>
                 <p>MyoForge is a personal experiment in making automotive knowledge feel tangible. It is designed to give curious people a place to ask “what if?” and turn that question into a considered build.<br></br>It is developed by a high school student with an aim to bring the car community together give them a way of expressing their wildest ideas.<br> </br> Open for collaboration - Contact me! <br> </br> <a href="mailto:likhith.lokanadham@outlook.com" style="color: white;">likhith.lokanadham@outlook.com</a></p>
             </section>
-        </div>
-    `;
-}
-
-function renderBeginnerGuide() {
-    const categoryCount = BEGINNER_CATEGORY_KEYS.length;
-    const partCount = BEGINNER_CATEGORY_KEYS.reduce((total, category) => total + getVisibleParts(category).length, 0);
-    return `
-        <div class="onboarding-guide">
-            <div class="guide-container">
-                <div class="guide-header">
-                    <h1>Getting Started with MyoForge</h1>
-                    <p>Learn how to build your custom car step by step</p>
-                </div>
-                
-                <div class="guide-content">
-                    <div class="guide-step">
-                        <div class="step-number">1</div>
-                        <h3>Create Your First Car</h3>
-                        <p>Start by naming your custom car build. This is your canvas - give it a name that represents your vision. You can create multiple cars to explore different build concepts.</p>
-                    </div>
-                    
-                    <div class="guide-step">
-                        <div class="step-number">2</div>
-                        <h3>Choose a Category</h3>
-                        <p>Browse ${categoryCount} friendly starting points covering the engine, wheels, suspension, brakes, body, cabin, lights, and safety. There are ${partCount} carefully chosen components to explore.</p>
-                    </div>
-                    
-                    <div class="guide-step">
-                        <div class="step-number">3</div>
-                        <h3>Select Parts</h3>
-                        <p>Explore available parts as interactive tiles. Hover over any part to see a flip animation revealing its description and significance. Understanding what each part does helps you make informed decisions.</p>
-                    </div>
-                    
-                    <div class="guide-step">
-                        <div class="step-number">4</div>
-                        <h3>Preview Your Build</h3>
-                        <p>Your selected parts appear in real-time on the preview panel. You can see everything you've added and remove parts anytime if you change your mind.</p>
-                    </div>
-                    
-                    <div class="guide-step">
-                        <div class="step-number">5</div>
-                        <h3>Save & Customize</h3>
-                        <p>Once satisfied with your build, save it to your garage. You can continue customizing anytime, create multiple variations, or start fresh with a new car.</p>
-                    </div>
-                </div>
-                
-                <div class="guide-navigation">
-                    <button class="guide-nav-btn back" onclick="goBackToLanding()">Back</button>
-                    <div class="progress-indicator">Ready to build?</div>
-                    <button class="guide-nav-btn" style="background: linear-gradient(135deg, #6B8E23, #556B2F); border-color: #D4AF37; color: white;" 
-                            onclick="startBuilding()">Start Building <i class="fas fa-arrow-right"></i></button>
-                </div>
-                ${renderRoleControl()}
-            </div>
         </div>
     `;
 }
@@ -1142,7 +1132,6 @@ function renderEnthusiastGuide() {
                     <button class="guide-nav-btn" style="background: linear-gradient(135deg, #6B8E23, #556B2F); border-color: #D4AF37; color: white;" 
                             onclick="startBuilding()">Let's Build <i class="fas fa-arrow-right"></i></button>
                 </div>
-                ${renderRoleControl()}
             </div>
         </div>
     `;
@@ -1265,7 +1254,7 @@ function renderCarBuilder() {
                                 <div>
                                     <div class="section-kicker">Active system</div>
                                     <h2>${selectedCategory}</h2>
-                                    <p class="section-significance">${userRole === 'beginner' ? CAR_PARTS[selectedCategory].beginnerSignificance : CAR_PARTS[selectedCategory].enthusiastSignificance}</p>
+                                    <p class="section-significance">${CAR_PARTS[selectedCategory].enthusiastSignificance}</p>
                                 </div>
                                 <label class="system-filter">System
                                     <select aria-label="Filter parts by system" onchange="selectCategory(this.value)">
@@ -1402,23 +1391,12 @@ function getPartImage(category, part = null) {
     return images[category] || images['Body & Exterior'];
 }
 
-function renderRoleControl() {
-    return `
-        <div class="mode-control" aria-label="Experience mode">
-            <span>mode</span>
-            <button class="mode-btn ${userRole === 'beginner' ? 'active' : ''}" onclick="switchRole('beginner')">Beginner</button>
-            <button class="mode-btn ${userRole === 'enthusiast' ? 'active' : ''}" onclick="switchRole('enthusiast')">Enthusiast</button>
-        </div>
-    `;
-}
-
 function renderAppHeader() {
     return `
         <header class="app-header">
             <a class="app-brand" href="#landing" onclick="goBackToLanding()">Myo<span>Forge</span></a>
-            <div class="app-header-meta">vehicle composition studio / ${userRole || 'custom'} mode</div>
+            <div class="app-header-meta">vehicle composition studio / enthusiast workshop</div>
             <div class="app-header-actions">
-                ${renderRoleControl()}
                 <button class="header-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Log out</button>
             </div>
         </header>
@@ -1444,7 +1422,6 @@ function renderAuthSection() {
                     <div style="padding: 10px 20px; border-bottom: 1px solid rgba(107, 142, 35, 0.3); color: #d0d0d0;">
                         ${currentUser.email}
                     </div>
-                    <div class="dropdown-role-control">${renderRoleControl()}</div>
                     <button class="dropdown-item" onclick="replayGuide()">
                         <i class="fas fa-compass"></i> Replay Guide
                     </button>
@@ -1462,17 +1439,7 @@ function proceedFromLanding() {
     if (!currentUser) {
         simulateGmailLogin();
     }
-    
-    if (!userRole) {
-        showMessage('Please select a role first', 'warning');
-        return;
-    }
-    
-    if (userRole === 'beginner') {
-        render('beginnerGuide');
-    } else {
-        render('enthusiastOnboarding');
-    }
+    render('enthusiastOnboarding');
 }
 
 function goBackToLanding() {
@@ -1561,23 +1528,9 @@ function toggleCategorySidebar() {
     }
 }
 
-function changeRole() {
-    const newRole = userRole === 'beginner' ? 'enthusiast' : 'beginner';
-    switchRole(newRole);
-    toggleUserMenu();
-}
-
-function switchRole(role) {
-    const guideIsOpen = Boolean(document.querySelector('.onboarding-guide'));
-    setUserRole(role);
-    if (guideIsOpen) {
-        render(role === 'beginner' ? 'beginnerGuide' : 'enthusiastOnboarding');
-    }
-}
-
 function replayGuide() {
     toggleUserMenu();
-    render(userRole === 'beginner' ? 'beginnerGuide' : 'enthusiastGuide');
+    render('enthusiastGuide');
 }
 
 function toggleUserMenu() {
@@ -1601,8 +1554,6 @@ function render(page = null) {
         content = renderEnthusiastOnboarding();
     } else if (page === 'enthusiastGuide') {
         content = renderEnthusiastGuide();
-    } else if (page === 'beginnerGuide') {
-        content = renderBeginnerGuide();
     } else if (page === 'builder' || currentCarId) {
         content = renderCarBuilder();
     } else {

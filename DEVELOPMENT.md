@@ -46,7 +46,6 @@ MyoForge/
 body { ... }               /* Global styles */
 h1, h2, h3 { ... }         /* Typography */
 .landing-page { ... }      /* Landing page styles */
-.role-selector { ... }     /* Role selection styles */
 .onboarding-guide { ... }  /* Onboarding styles */
 .car-garage { ... }        /* Garage page styles */
 .car-builder { ... }       /* Builder page styles */
@@ -191,34 +190,12 @@ const CAR_PARTS = {
 
 ## Common Development Tasks
 
-### Task: Add Role-Specific Features
-
-Example: Show different buttons for Beginner vs Enthusiast
-
-```javascript
-function renderCarBuilder() {
-    const car = getCurrentCar();
-    const isBeginnerMode = userRole === 'beginner';
-    
-    return `
-        <div class="car-builder">
-            ${isBeginnerMode ? `
-                <div class="helper-tip">
-                    <p>Hover over parts to learn what they do!</p>
-                </div>
-            ` : ''}
-            <!-- rest of builder -->
-        </div>
-    `;
-}
-```
-
-### Task: Add New Onboarding Step
+### Task: Add an Onboarding Step
 
 Edit the appropriate guide component:
 
 ```javascript
-function renderBeginnerGuide() {
+function renderEnthusiastGuide() {
     return `
         <div class="onboarding-guide">
             <div class="guide-step">
@@ -254,21 +231,19 @@ function saveToLocalStorage(key, data) {
 ### Functionality Tests
 - [ ] Landing page loads correctly
 - [ ] Login/logout works
-- [ ] Role selection persists
+- [ ] Existing profiles enter the full catalog
 - [ ] Can create new car
 - [ ] Can add parts to car
 - [ ] Can remove parts from car
 - [ ] Can edit existing car
 - [ ] Can delete car with confirmation
 - [ ] Data persists on page refresh
-- [ ] Beginner guide shows all 5 steps
-- [ ] Enthusiast mode offers both options
+- [ ] Enthusiast onboarding offers both options
 - [ ] Skip buttons work everywhere
 - [ ] Navigation between pages works
 
 ### Visual Tests
 - [ ] Landing page looks good
-- [ ] Role buttons toggle correctly
 - [ ] Flip animation is smooth
 - [ ] Colors match theme
 - [ ] Text is readable

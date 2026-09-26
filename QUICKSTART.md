@@ -8,9 +8,9 @@ Simply open `index.html` in your web browser (Chrome, Firefox, Safari, or Edge)
 ### 2. **Sign In with Gmail**
 Click "Sign in with Gmail" button (simulated for demo)
 
-### 3. **Choose Your Role**
-- **👨‍🎓 Beginner:** Complete guided tour with 5 steps
-- **⭐ Enthusiast:** Quick start or optional guide
+### 3. **Choose Your Start**
+- Jump straight to your garage
+- Take the optional enthusiast tour
 
 ### 4. **Start Building**
 - Create a new car with a custom name
@@ -33,13 +33,12 @@ Click "Sign in with Gmail" button (simulated for demo)
 ## 🎮 Basic Controls
 
 ### Landing Page
-- Click role button to select Beginner or Enthusiast
-- Click "Get Started" to proceed
+- Sign in to enter the enthusiast workshop
 
 ### Onboarding
-- Read the guide steps
-- Click "Start Building" to begin customization
-- Click "Skip" to jump straight to builder
+- Choose "I Got This" to continue directly
+- Choose "Show Me Around" for the optional tour
+- Skip the tour to enter the garage
 
 ### Car Builder
 - **Click category tabs** to switch between sections
@@ -61,8 +60,8 @@ Every single aspect of your car can be modified - not just visuals, but performa
 ### Smart Animations
 The 180° flip animation reveals part descriptions with a clean, minimalistic approach - no jarring movements, just smooth transitions.
 
-### Role-Based Experience
-Beginners get a comprehensive guide, while enthusiasts can jump right in. Both can switch roles anytime.
+### Enthusiast Workshop
+The full catalog is available to every signed-in user, with an optional guide for orientation.
 
 ### Real-Time Feedback
 See your build come together instantly as parts are added. The preview panel keeps pace with every change.
@@ -98,15 +97,7 @@ All your cars and customizations are saved in your browser's localStorage. This 
 - ✅ No data is sent to any server (demo version)
 - ✅ You can export your builds for sharing (future feature)
 
-## 🎓 Beginner Mode: 5-Step Guide
-
-1. **Create Your First Car** - Give your build a cool name
-2. **Choose a Category** - 26 major systems to customize
-3. **Select Parts** - Browse and add components to your car
-4. **Preview Your Build** - See everything in real-time
-5. **Save & Customize** - Keep refining your masterpiece
-
-## ⭐ Enthusiast Mode: Quick Start
+## ⭐ Enthusiast Quick Start
 
 Choose how you want to begin:
 - **"I Got This"** → Skip straight to the builder
@@ -129,11 +120,6 @@ Choose how you want to begin:
 1. Find it in the preview panel
 2. Click the remove (×) button
 3. Part is instantly removed
-
-### Change Your Role
-1. Click your profile icon (top right)
-2. Select "Change Role"
-3. Choose Beginner or Enthusiast
 
 ### Edit an Existing Car
 1. Find it in your garage
