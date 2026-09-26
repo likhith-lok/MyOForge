@@ -1035,6 +1035,7 @@ function renderLandingPage() {
                     <div class="section-kicker">Enthusiast workshop</div>
                     <h2>Start your build.</h2>
                     <p>Jump straight into the full vehicle catalog or take a quick tour first.</p>
+                    <br>
                     <button class="get-started-btn" onclick="${signedIn ? "render('garage')" : 'proceedFromLanding()'}">${signedIn ? 'Enter My Garage' : 'Sign in with Gmail'} <i class="fas fa-arrow-right"></i></button>
                 </section>
             </div>
