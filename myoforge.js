@@ -1022,7 +1022,7 @@ function renderLandingPage() {
                     <p class="lede">A tactile studio for making the car that exists in your head. Choose the systems, surfaces, and <u>minutest</u> details that make it yours.</p>
                     <div class="landing-notes">
                         <div><strong>300</strong> component types</div>
-                        <div><strong>∞</strong> build directions</div>
+                        <div><strong>INFINITE</strong> build directions</div>
                         <div><strong>local</strong> private garage</div>
                     </div>
                 </section>
@@ -1132,7 +1132,7 @@ function renderEnthusiastGuide() {
                 <div class="guide-navigation">
                     <button class="skip-guide-btn guide-nav-btn" onclick="skipGuideAndBuild()">Skip & Build Now</button>
                     <button class="guide-nav-btn" style="background: linear-gradient(135deg, #6B8E23, #556B2F); border-color: #D4AF37; color: white;" 
-                            onclick="startBuilding()">Let's Build <i class="fas fa-arrow-right"></i></button>
+                            onclick="startBuilding()">Let's Go!</button>
                 </div>
             </div>
         </div>

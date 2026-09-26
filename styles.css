@@ -89,17 +89,17 @@ h1, h2, h3, h4 { line-height: 1.05; }
 .guide-content { display: grid; gap: 10px; }
 .guide-step { display: grid; gap: 18px; padding: 24px 0; border-top: 1px solid var(--line); }
 .guide-step { animation: guideStepIn 500ms cubic-bezier(.2,.8,.2,1) both; }
-.guide-step:nth-child(2) { animation-delay: 70ms; }
-.guide-step:nth-child(3) { animation-delay: 140ms; }
-.guide-step:nth-child(4) { animation-delay: 210ms; }
-.guide-step:nth-child(5) { animation-delay: 280ms; }
+.guide-step:nth-child(2) { animation-delay: 100ms; }
+.guide-step:nth-child(3) { animation-delay: 200ms; }
+.guide-step:nth-child(4) { animation-delay: 300ms; }
+.guide-step:nth-child(5) { animation-delay: 400ms; }
 .step-number { color: var(--acid); font: 500 1.1rem 'DM Mono', monospace; }
 .guide-step h3 { font-size: 1.15rem; }
 .guide-step p { margin-top: 8px; color: var(--muted); font-size: .92rem; }
 .guide-navigation, .enthusiast-buttons { display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-top: 32px; }
 .guide-nav-btn, .action-btn { padding: 13px 18px; background: var(--brass); color: var(--ink); }
 .guide-nav-btn.back, .action-btn.secondary { background: transparent; border: 1px solid var(--line); color: var(--paper); }
-.skip-guide-btn { color: var(--danger) !important; border-color: rgba(239,141,118,.5) !important; }
+.skip-guide-btn { color: var(--danger) !important; border-color: #D4AF37 !important; }
 .progress-indicator { color: var(--muted); font: .7rem 'DM Mono', monospace; text-transform: uppercase; }
 
 .garage-header, .builder-header { max-width: 1240px; margin: 30px auto 38px; display: flex; align-items: end; justify-content: space-between; gap: 20px; }
