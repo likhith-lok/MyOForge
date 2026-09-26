@@ -640,6 +640,7 @@ let currentCarId = null;
 let currentCategory = null;
 let catalogSearchQuery = '';
 let catalogInstallFilter = 'all';
+let createCarDialogTrigger = null;
 
 const VEHICLE_CATALOG = {
     Acura: { 'Integra': 'combustion', 'MDX': 'combustion', 'NSX': 'hybrid', 'RDX': 'combustion', 'TLX': 'combustion' },
@@ -1170,7 +1171,7 @@ function renderCarGarage() {
                                 <i class="fas fa-car"></i>
                             </div>
                             <div class="car-card-content">
-                                <div class="car-card-title">${car.name}</div>
+                                    <div class="car-card-title">${escapeHtml(car.name)}</div>
                                 <div class="car-card-info">
                                     <i class="fas fa-calendar-alt"></i> 
                                     ${new Date(car.createdAt).toLocaleDateString()}
@@ -1228,6 +1229,16 @@ function renderCarBuilder() {
                         </button>
                     </div>
                 </div>
+
+                <div class="mobile-builder-bar">
+                    <label for="mobileSystemSelect">System</label>
+                    <select id="mobileSystemSelect" aria-label="Selected vehicle system" onchange="selectCategory(this.value)">
+                        ${visibleCategories.map(category => `<option value="${category}" ${selectedCategory === category ? 'selected' : ''}>${category}</option>`).join('')}
+                    </select>
+                    <button type="button" onclick="goToBuildSummary()" aria-label="Jump to build summary">
+                        <i class="fas fa-list-check" aria-hidden="true"></i><span>Build (${installedParts.length})</span>
+                    </button>
+                </div>
                 
                 <div class="builder-content">
                     <aside class="category-sidebar" id="categorySidebar">
@@ -1282,7 +1293,7 @@ function renderCarBuilder() {
                                         const installed = (car.parts[selectedCategory] || []).some(item => item.id === part.id);
                                         const fitment = getPartFitment(part, vehicle);
                                         const [low, high] = getPartCostEstimate(selectedCategory, part);
-                                        return `<article class="part-tile" data-installed="${installed}" data-search="${escapeHtml(`${part.name} ${part.description}`.toLowerCase())}">
+                                        return `<article class="part-tile" data-installed="${installed}" data-search="${escapeHtml(`${part.name} ${part.description}`.toLowerCase())}" onkeydown="handlePartTileKeydown(event, this)">
                                         <div class="part-tile-inner">
                                             <div class="part-front" style="background-image: url('${getPartImage(selectedCategory, part)}');">
                                                 <div class="part-icon">
@@ -1291,8 +1302,9 @@ function renderCarBuilder() {
                                                 <div class="part-name">${part.name}</div>
                                                 <div class="part-category">${selectedCategory}</div>
                                                 <span class="fitment-badge ${fitment.status}">${fitment.label}</span>
+                                                <button type="button" class="part-details-toggle" aria-expanded="false" aria-controls="part-details-${part.id}" onclick="togglePartDetails(event, this.closest('.part-tile'))">Details</button>
                                             </div>
-                                            <div class="part-back">
+                                            <div class="part-back" id="part-details-${part.id}">
                                                 <div class="part-description">${part.description}</div>
                                                 <span class="part-estimate">Planning estimate: ${formatCurrency(low)}–${formatCurrency(high)}</span>
                                                 <button class="part-add-btn" onclick="addPartToCar('${part.id}', '${selectedCategory}')" ${fitment.canAdd ? '' : 'disabled'}>
@@ -1308,7 +1320,7 @@ function renderCarBuilder() {
                         </div>
                     </main>
                     
-                    <div class="car-preview-section">
+                    <div class="car-preview-section" id="buildSummary" tabindex="-1">
                         <div class="preview-title">Your Build</div>
                         <div class="car-preview" style="--build-color: ${car.color || '#556B2F'}">
                             <i class="fas fa-car-side" aria-hidden="true"></i>
@@ -1398,7 +1410,10 @@ function renderAppHeader() {
             <a class="app-brand" href="#landing" onclick="goBackToLanding()">Myo<span>Forge</span></a>
             <div class="app-header-meta">vehicle composition studio / enthusiast workshop</div>
             <div class="app-header-actions">
-                <button class="header-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Log out</button>
+                <button class="header-action" onclick="backToGarage()" aria-label="Open garage" title="Open garage"><i class="fas fa-warehouse" aria-hidden="true"></i><span>Garage</span></button>
+                <button class="header-action primary" onclick="showCreateCarDialog()" aria-label="Create a new build" title="Create a new build"><i class="fas fa-plus" aria-hidden="true"></i><span>New Build</span></button>
+                <button class="header-action" onclick="render('enthusiastGuide')" aria-label="Open workshop guide" title="Open workshop guide"><i class="fas fa-compass" aria-hidden="true"></i><span>Guide</span></button>
+                <button class="header-logout" onclick="logout()" aria-label="Log out" title="Log out"><i class="fas fa-sign-out-alt" aria-hidden="true"></i><span>Log out</span></button>
             </div>
         </header>
     `;
@@ -1464,15 +1479,18 @@ function startBuilding() {
 }
 
 function showCreateCarDialog() {
+    if (document.querySelector('.modal-backdrop')) return;
+    createCarDialogTrigger = document.activeElement;
     const modal = document.createElement('div');
     modal.className = 'modal-backdrop';
+    modal.setAttribute('onclick', 'handleCreateDialogBackdrop(event)');
     modal.innerHTML = `
-        <form class="create-car-modal" onsubmit="confirmCreateCar(event)">
+        <form class="create-car-modal" role="dialog" aria-modal="true" aria-labelledby="create-car-title" aria-describedby="create-car-description" onsubmit="confirmCreateCar(event)" onkeydown="handleCreateDialogKeydown(event)">
             <div class="section-kicker">New configuration</div>
-            <h2>Name your build</h2>
-            <p>Give this direction a name. You can keep as many versions in your garage as you like.</p>
+            <h2 id="create-car-title">Name your build</h2>
+            <p id="create-car-description">Give this direction a name. You can keep as many versions in your garage as you like.</p>
             <label for="car-name">Build name</label>
-            <input id="car-name" name="carName" value="My Custom Build" maxlength="40" autofocus>
+            <input id="car-name" name="carName" value="My Custom Build" maxlength="40" autocomplete="off" required>
             <div class="modal-actions">
                 <button type="button" class="builder-btn" onclick="closeCreateCarDialog()">Cancel</button>
                 <button type="submit" class="builder-btn save">Create build</button>
@@ -1480,19 +1498,58 @@ function showCreateCarDialog() {
         </form>
     `;
     document.body.appendChild(modal);
-    modal.querySelector('input').select();
+    const appRoot = document.getElementById('root');
+    if (appRoot) appRoot.inert = true;
+    document.addEventListener('keydown', handleCreateDialogKeydown);
+    const input = modal.querySelector('input');
+    input.focus();
+    input.select();
 }
 
 function confirmCreateCar(event) {
     event.preventDefault();
-    const name = event.target.carName.value.trim() || 'My Custom Build';
+    const name = event.currentTarget.elements.namedItem('carName').value.trim() || 'My Custom Build';
     createNewCar(name);
-    closeCreateCarDialog();
+    closeCreateCarDialog(false);
     editCar(userCars[userCars.length - 1].id);
+    document.querySelector('.builder-header h1')?.focus({ preventScroll: true });
 }
 
-function closeCreateCarDialog() {
-    document.querySelector('.modal-backdrop')?.remove();
+function handleCreateDialogBackdrop(event) {
+    if (event.target === event.currentTarget) closeCreateCarDialog();
+}
+
+function handleCreateDialogKeydown(event) {
+    const dialog = document.querySelector('.create-car-modal');
+    if (!dialog) return;
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        closeCreateCarDialog();
+        return;
+    }
+    if (event.key !== 'Tab') return;
+
+    const focusable = [...dialog.querySelectorAll('input:not([disabled]), button:not([disabled])')];
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+    }
+}
+
+function closeCreateCarDialog(restoreFocus = true) {
+    const modal = document.querySelector('.modal-backdrop');
+    if (!modal) return;
+    modal.remove();
+    const appRoot = document.getElementById('root');
+    if (appRoot) appRoot.inert = false;
+    document.removeEventListener('keydown', handleCreateDialogKeydown);
+    if (restoreFocus && createCarDialogTrigger?.isConnected) createCarDialogTrigger.focus();
+    createCarDialogTrigger = null;
 }
 
 function editCar(carId) {
@@ -1516,6 +1573,33 @@ function deleteCarConfirm(carId) {
 function selectCategory(category) {
     currentCategory = category;
     render('builder');
+}
+
+function togglePartDetails(event, tile, open = null) {
+    event.preventDefault();
+    event.stopPropagation();
+    const shouldOpen = open === null ? !tile.classList.contains('details-open') : open;
+    tile.classList.toggle('details-open', shouldOpen);
+    tile.classList.toggle('details-dismissed', !shouldOpen);
+    const detailsButton = tile.querySelector('.part-details-toggle');
+    detailsButton?.setAttribute('aria-expanded', String(shouldOpen));
+    if (shouldOpen) tile.querySelector('.part-details-close')?.focus();
+    else detailsButton?.focus();
+}
+
+function handlePartTileKeydown(event, tile) {
+    if (event.key === 'Escape' && tile.classList.contains('details-open')) {
+        event.preventDefault();
+        togglePartDetails(event, tile, false);
+    }
+}
+
+function goToBuildSummary() {
+    const summary = document.getElementById('buildSummary');
+    if (!summary) return;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    summary.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    summary.focus({ preventScroll: true });
 }
 
 function toggleCategorySidebar() {
