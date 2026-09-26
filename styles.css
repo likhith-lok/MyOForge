@@ -144,9 +144,18 @@ h1, h2, h3, h4 { line-height: 1.05; }
 .workspace-heading h2 { margin-top: 6px; font-size: clamp(1.35rem, 2vw, 2rem); letter-spacing: -.05em; }
 .section-significance { max-width: 620px; margin-top: 10px; color: var(--muted); font-size: .82rem; line-height: 1.55; }
 .component-count { color: var(--muted); font: .65rem 'DM Mono', monospace; text-transform: uppercase; }
+.system-filter, .installed-filter { display: grid; gap: 5px; color: var(--muted); font: .62rem 'DM Mono', monospace; text-transform: uppercase; }
+.system-filter select, .installed-filter select, .vehicle-fields select { min-width: 0; padding: 9px 10px; border: 1px solid var(--line); background: var(--ink-soft); color: var(--paper); font: 500 .72rem 'Manrope', sans-serif; }
+.system-filter select { max-width: 190px; }
+.parts-toolbar { display: grid; grid-template-columns: minmax(140px, 1fr) auto auto; align-items: end; gap: 10px; margin: 0 0 16px; }
+.catalog-search { min-height: 38px; display: flex; align-items: center; gap: 9px; padding: 0 11px; border: 1px solid var(--line); background: var(--ink-soft); color: var(--olive-bright); }
+.catalog-search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--paper); font: .76rem 'Manrope', sans-serif; }
+.catalog-search input::placeholder { color: var(--muted); }
+.catalog-empty { padding: 28px 12px; color: var(--muted); text-align: center; font-size: .82rem; }
 .builder-workspace .category-tabs { min-width: 0; }
 .car-preview-section { grid-column: 3; grid-row: 1; height: fit-content; position: sticky; top: 88px; }
 .parts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+.part-tile[hidden] { display: none; }
 .part-tile { perspective: 900px; min-height: 270px; }
 .part-tile-inner { position: relative; width: 100%; height: 270px; transition: transform 400ms ease; transform-style: preserve-3d; }
 .part-tile:hover .part-tile-inner, .part-tile:focus-within .part-tile-inner { transform: rotateY(180deg); }
@@ -161,9 +170,31 @@ h1, h2, h3, h4 { line-height: 1.05; }
 .part-category { color: var(--acid); font: .62rem 'DM Mono', monospace; margin-top: 8px; text-transform: uppercase; }
 .part-back { transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; background: var(--olive); }
 .part-description { font-size: .82rem; }
+.fitment-badge { display: inline-flex; align-self: flex-start; margin-top: 9px; padding: 4px 7px; border: 1px solid currentColor; color: var(--brass); font: 500 .58rem 'DM Mono', monospace; text-transform: uppercase; }
+.fitment-badge.compatible { color: var(--acid); }
+.fitment-badge.vehicle-needed { color: var(--muted); }
+.fitment-badge.mismatch { color: var(--danger); }
+.part-estimate { margin: 12px 0 4px; color: var(--paper); font: .62rem 'DM Mono', monospace; }
 .part-add-btn { margin-top: auto; padding: 10px; border: 0; background: var(--acid); color: var(--ink); cursor: pointer; font-weight: 800; }
+.part-add-btn:disabled { background: rgba(239,141,118,.25); color: var(--paper); cursor: not-allowed; }
 .preview-title { color: var(--acid); font: 500 .72rem 'DM Mono', monospace; text-transform: uppercase; }
-.car-preview { margin: 16px 0; aspect-ratio: 4/2.5; display: grid; place-items: center; background: linear-gradient(135deg, var(--olive), #3a452a); color: var(--acid); font-size: 4rem; }
+.car-preview { margin: 16px 0; aspect-ratio: 4/2.5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; overflow: hidden; background: radial-gradient(ellipse at 50% 75%, rgba(215,233,139,.14), transparent 55%), linear-gradient(145deg, var(--panel-light), var(--ink-soft)); border: 1px solid var(--line); color: var(--build-color, var(--olive)); }
+.car-preview i { font-size: 5rem; filter: drop-shadow(0 10px 8px rgba(0,0,0,.45)); transition: color 180ms ease; }
+.car-preview span { max-width: 90%; overflow: hidden; color: var(--muted); font: .62rem 'DM Mono', monospace; text-overflow: ellipsis; white-space: nowrap; text-transform: uppercase; }
+.vehicle-selectors, .build-summary { margin-top: 17px; padding-top: 15px; border-top: 1px solid var(--line); }
+.vehicle-section-title, .build-summary-heading { margin-bottom: 10px; color: var(--acid); font: 500 .68rem 'DM Mono', monospace; text-transform: uppercase; }
+.vehicle-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.vehicle-fields label { display: grid; gap: 5px; color: var(--muted); font: .62rem 'DM Mono', monospace; text-transform: uppercase; }
+.vehicle-fields label:last-child { grid-column: 1 / -1; }
+.vehicle-fields select { width: 100%; font-size: .7rem; }
+.vehicle-fields select:disabled { opacity: .45; }
+.fitment-note, .estimate-disclaimer { margin-top: 9px; color: var(--muted); font-size: .66rem; line-height: 1.45; }
+.summary-row, .summary-cost { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 7px 0; color: var(--muted); font-size: .72rem; }
+.summary-row strong, .summary-cost strong { color: var(--paper); text-align: right; }
+.color-picker-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 0; color: var(--muted); font-size: .72rem; }
+.color-picker-row input { width: 42px; height: 28px; padding: 2px; border: 1px solid var(--line); background: var(--ink-soft); cursor: pointer; }
+.summary-cost { margin-top: 6px; padding-top: 11px; border-top: 1px solid var(--line); }
+.summary-cost strong { color: var(--acid); font: 500 .73rem 'DM Mono', monospace; }
 .preview-parts-list h4 { font-size: .9rem; }
 .preview-part-item { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: .78rem; }
 .preview-part-item .part-name { font-weight: 500; color: var(--paper); }
@@ -189,3 +220,14 @@ h1, h2, h3, h4 { line-height: 1.05; }
 @media (max-width: 1100px) { .builder-content { grid-template-columns: 210px minmax(0, 1fr); } .car-preview-section { grid-column: 1 / -1; grid-row: 2; position: static; } }
 @media (max-width: 900px) { .landing-main { grid-template-columns: 1fr; gap: 30px; padding-top: 40px; } .hero-machine { min-height: 340px; order: -1; } .hero-machine img { width: 90%; } .builder-content { grid-template-columns: 190px minmax(0, 1fr); } }
 @media (max-width: 600px) { .site-nav, .landing-main, .landing-lower, .developer-section { width: min(100% - 32px, 1240px); } .nav-meta { display: none; } .landing-copy h1 { font-size: 3.3rem; } .landing-notes { gap: 14px; flex-wrap: wrap; } .entry-panel { padding: 22px; } .landing-feature-grid, .developer-section { grid-template-columns: 1fr; } .developer-section { gap: 24px; } .app-header { align-items: flex-start; flex-wrap: wrap; padding: 12px 16px; } .app-header-meta { order: 3; flex-basis: 100%; } .app-header-actions { margin-left: auto; } .app-header-actions .mode-control { width: auto; } .onboarding-guide, .car-garage, .car-builder { padding: 24px 16px; } .garage-header, .builder-header { align-items: start; flex-direction: column; } .garage-actions, .builder-actions { width: 100%; justify-content: flex-start; } .builder-btn { flex: 1; } .builder-content { grid-template-columns: 1fr; } .category-sidebar { position: static; max-height: 320px; } .category-sidebar.collapsed { width: 100%; max-height: 64px; } .car-preview-section { grid-column: auto; grid-row: auto; } .guide-navigation, .enthusiast-buttons { align-items: stretch; flex-direction: column; } .guide-nav-btn, .action-btn { width: 100%; text-align: center; } .mode-control { width: 100%; justify-content: center; } }
+@media (max-width: 600px) {
+    .workspace-heading { align-items: stretch; flex-direction: column; }
+    .system-filter select { width: 100%; max-width: none; }
+    .parts-toolbar { grid-template-columns: minmax(0, 1fr) auto; }
+    .catalog-search { grid-column: 1 / -1; }
+    .component-count { align-self: center; text-align: right; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .car-preview i { transition: none; }
+}

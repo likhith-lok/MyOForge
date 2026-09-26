@@ -652,6 +652,67 @@ let userPreferences = {};
 let userCars = [];
 let currentCarId = null;
 let currentCategory = null;
+let catalogSearchQuery = '';
+let catalogInstallFilter = 'all';
+
+const VEHICLE_CATALOG = {
+    Toyota: { 'Corolla': 'combustion', 'Prius': 'hybrid' },
+    Ford: { 'Mustang': 'combustion', 'Mustang Mach-E': 'electric', 'F-150': 'combustion' },
+    Tesla: { 'Model 3': 'electric', 'Model Y': 'electric' },
+    Porsche: { '911': 'combustion', 'Taycan': 'electric' }
+};
+
+const VEHICLE_YEARS = Array.from({ length: 27 }, (_, index) => 2000 + index);
+const UNIVERSAL_PART_IDS = new Set([
+    'paint-matte-black', 'paint-pearl-white', 'paint-metallic-red', 'paint-chameleon',
+    'paint-satin-green', 'wrap-carbon', 'wrap-printed', 'ceramic-coating'
+]);
+
+function getVehiclePowertrain(vehicle) {
+    return VEHICLE_CATALOG[vehicle?.make]?.[vehicle?.model] || null;
+}
+
+function getPartFitment(part, vehicle) {
+    const powertrain = getVehiclePowertrain(vehicle);
+    if (!vehicle?.make || !vehicle?.model || !vehicle?.year) {
+        return { status: 'vehicle-needed', label: 'Select a vehicle', canAdd: true };
+    }
+    if (part.id.startsWith('ev-') && powertrain && powertrain !== 'electric') {
+        return { status: 'mismatch', label: 'Powertrain mismatch', canAdd: false };
+    }
+    if (powertrain === 'electric' && /^(engine-|turbo-|supercharger-|fuel-|ignition-|spark-)/.test(part.id)) {
+        return { status: 'mismatch', label: 'Powertrain mismatch', canAdd: false };
+    }
+    if (UNIVERSAL_PART_IDS.has(part.id)) {
+        return { status: 'compatible', label: 'Universal fitment', canAdd: true };
+    }
+    return { status: 'unverified', label: 'Fitment not verified', canAdd: true };
+}
+
+function getPartCostEstimate(category, part) {
+    const costBands = [
+        [/Paint, Wrap|Body Panels|Aerodynamics/, [250, 3500]],
+        [/Engine Core|EV Battery & Drive|Transmission & Driveline/, [1200, 12000]],
+        [/Forced Induction|Fuel & Ignition|Exhaust & Emissions/, [150, 4500]],
+        [/Suspension|Wheels & Tires|Braking|Steering & Chassis|Off-Road/, [180, 3200]],
+        [/Seats|Interior|Infotainment|Controls/, [80, 2400]],
+        [/Safety|Electrical|Sensors|Lighting|Security/, [60, 1800]],
+        [/Cooling|Fluids|Service|Cargo|Glass|Exterior Details|Track|Competition/, [40, 1400]]
+    ];
+    const band = costBands.find(([pattern]) => pattern.test(category))?.[1] || [50, 1600];
+    const scale = /engine|battery-pack|motor|transmission|roll-cage|widebody|wing-adjustable/i.test(part.id) ? 1.8 : 1;
+    return [Math.round(band[0] * scale), Math.round(band[1] * scale)];
+}
+
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(amount);
+}
+
+function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, character => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[character]);
+}
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -759,7 +820,8 @@ function createNewCar(carName) {
         name: carName || 'My Custom Build',
         createdAt: new Date().toISOString(),
         parts: {},
-        color: '#556B2F'
+        color: '#556B2F',
+        vehicle: { make: '', model: '', year: '' }
     };
     
     userCars.push(newCar);
@@ -801,6 +863,11 @@ function addPartToCar(partId, category) {
     const part = parts.find(p => p.id === partId);
     
     if (part) {
+        const fitment = getPartFitment(part, car.vehicle);
+        if (!fitment.canAdd) {
+            showMessage(`${part.name} does not match the selected vehicle powertrain.`, 'error');
+            return;
+        }
         if (!car.parts[category]) {
             car.parts[category] = [];
         }
@@ -837,6 +904,51 @@ function saveCar() {
         saveToLocalStorage('myoforge_user', currentUser);
     }
     showMessage('Car saved successfully!', 'success');
+}
+
+function updateVehicleSelection(field, value) {
+    const car = getCurrentCar();
+    if (!car) return;
+    car.vehicle = car.vehicle || { make: '', model: '', year: '' };
+    car.vehicle[field] = value;
+    if (field === 'make') car.vehicle.model = '';
+    if (currentUser) {
+        currentUser.cars = userCars;
+        saveToLocalStorage('myoforge_user', currentUser);
+    }
+    render('builder');
+}
+
+function updateBuildColor(color) {
+    const car = getCurrentCar();
+    if (!car) return;
+    car.color = color;
+    if (currentUser) {
+        currentUser.cars = userCars;
+        saveToLocalStorage('myoforge_user', currentUser);
+    }
+    const preview = document.querySelector('.car-preview');
+    if (preview) preview.style.setProperty('--build-color', color);
+    const colorValue = document.getElementById('buildColorValue');
+    if (colorValue) colorValue.textContent = color.toUpperCase();
+}
+
+function filterPartsCatalog() {
+    const query = catalogSearchQuery.trim().toLowerCase();
+    let visibleCount = 0;
+    document.querySelectorAll('.part-tile').forEach(tile => {
+        const matchesSearch = tile.dataset.search.includes(query);
+        const isInstalled = tile.dataset.installed === 'true';
+        const matchesStatus = catalogInstallFilter === 'all'
+            || (catalogInstallFilter === 'installed' && isInstalled)
+            || (catalogInstallFilter === 'not-installed' && !isInstalled);
+        tile.hidden = !(matchesSearch && matchesStatus);
+        if (!tile.hidden) visibleCount += 1;
+    });
+    const count = document.getElementById('catalogResultCount');
+    if (count) count.textContent = `${visibleCount} shown`;
+    const empty = document.getElementById('catalogEmptyState');
+    if (empty) empty.hidden = visibleCount > 0;
 }
 
 // Component Rendering Functions
@@ -1097,16 +1209,26 @@ function renderCarGarage() {
 function renderCarBuilder() {
     const car = getCurrentCar();
     if (!car) return renderCarGarage();
-    
+    const vehicle = car.vehicle || { make: '', model: '', year: '' };
+    const installedParts = Object.values(car.parts || {}).flat();
     const visibleCategories = getVisibleCategories();
     const selectedCategory = visibleCategories.includes(currentCategory) ? currentCategory : visibleCategories[0];
     const categoryParts = getVisibleParts(selectedCategory);
+    const modelOptions = Object.keys(VEHICLE_CATALOG[vehicle.make] || {});
+    const estimate = Object.entries(car.parts || {}).reduce((total, [category, parts]) => {
+        parts.forEach(part => {
+            const [low, high] = getPartCostEstimate(category, part);
+            total.low += low;
+            total.high += high;
+        });
+        return total;
+    }, { low: 0, high: 0 });
     
     return `
         <div class="car-builder">
             <div class="builder-container">
                 <div class="builder-header">
-                    <h1><i class="fas fa-tools"></i> ${car.name}</h1>
+                    <h1><i class="fas fa-tools"></i> ${escapeHtml(car.name)}</h1>
                     <div class="builder-actions">
                         <button class="builder-btn back" onclick="backToGarage()">
                             <i class="fas fa-arrow-left"></i> Back to Garage
@@ -1145,11 +1267,32 @@ function renderCarBuilder() {
                                     <h2>${selectedCategory}</h2>
                                     <p class="section-significance">${userRole === 'beginner' ? CAR_PARTS[selectedCategory].beginnerSignificance : CAR_PARTS[selectedCategory].enthusiastSignificance}</p>
                                 </div>
-                                <span class="component-count">${categoryParts.length} components</span>
+                                <label class="system-filter">System
+                                    <select aria-label="Filter parts by system" onchange="selectCategory(this.value)">
+                                        ${visibleCategories.map(category => `<option value="${category}" ${selectedCategory === category ? 'selected' : ''}>${category}</option>`).join('')}
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="parts-toolbar">
+                                <label class="catalog-search"><i class="fas fa-search" aria-hidden="true"></i>
+                                    <input type="search" placeholder="Search ${selectedCategory.toLowerCase()}" aria-label="Search parts" value="${escapeHtml(catalogSearchQuery)}" oninput="catalogSearchQuery=this.value;filterPartsCatalog()">
+                                </label>
+                                <label class="installed-filter">Show
+                                    <select aria-label="Filter by installation status" onchange="catalogInstallFilter=this.value;filterPartsCatalog()">
+                                        <option value="all" ${catalogInstallFilter === 'all' ? 'selected' : ''}>All parts</option>
+                                        <option value="not-installed" ${catalogInstallFilter === 'not-installed' ? 'selected' : ''}>Not installed</option>
+                                        <option value="installed" ${catalogInstallFilter === 'installed' ? 'selected' : ''}>Installed</option>
+                                    </select>
+                                </label>
+                                <span class="component-count" id="catalogResultCount">${categoryParts.length} shown</span>
                             </div>
                             <div class="parts-grid">
                                 ${categoryParts.map(part => `
-                                    <div class="part-tile">
+                                    ${(() => {
+                                        const installed = (car.parts[selectedCategory] || []).some(item => item.id === part.id);
+                                        const fitment = getPartFitment(part, vehicle);
+                                        const [low, high] = getPartCostEstimate(selectedCategory, part);
+                                        return `<article class="part-tile" data-installed="${installed}" data-search="${escapeHtml(`${part.name} ${part.description}`.toLowerCase())}">
                                         <div class="part-tile-inner">
                                             <div class="part-front" style="background-image: url('${getPartImage(selectedCategory, part)}');">
                                                 <div class="part-icon">
@@ -1157,32 +1300,72 @@ function renderCarBuilder() {
                                                 </div>
                                                 <div class="part-name">${part.name}</div>
                                                 <div class="part-category">${selectedCategory}</div>
+                                                <span class="fitment-badge ${fitment.status}">${fitment.label}</span>
                                             </div>
                                             <div class="part-back">
                                                 <div class="part-description">${part.description}</div>
-                                                <button class="part-add-btn" onclick="addPartToCar('${part.id}', '${selectedCategory}')">
-                                                    <i class="fas fa-plus"></i> Add Part
+                                                <span class="part-estimate">Planning estimate: ${formatCurrency(low)}–${formatCurrency(high)}</span>
+                                                <button class="part-add-btn" onclick="addPartToCar('${part.id}', '${selectedCategory}')" ${fitment.canAdd ? '' : 'disabled'}>
+                                                    <i class="fas ${installed ? 'fa-check' : 'fa-plus'}"></i> ${installed ? 'Add another' : 'Add Part'}
                                                 </button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </article>`;
+                                    })()}
                                 `).join('')}
                             </div>
+                            <p class="catalog-empty" id="catalogEmptyState" hidden>No parts match these filters.</p>
                         </div>
                     </main>
                     
                     <div class="car-preview-section">
                         <div class="preview-title">Your Build</div>
-                        <div class="car-preview">
-                            <i class="fas fa-car"></i>
+                        <div class="car-preview" style="--build-color: ${car.color || '#556B2F'}">
+                            <i class="fas fa-car-side" aria-hidden="true"></i>
+                            <span>${escapeHtml(car.name)}</span>
+                        </div>
+                        <div class="vehicle-selectors">
+                            <div class="vehicle-section-title">Base vehicle</div>
+                            <div class="vehicle-fields">
+                                <label>Make
+                                    <select aria-label="Vehicle make" onchange="updateVehicleSelection('make', this.value)">
+                                        <option value="">Select make</option>
+                                        ${Object.keys(VEHICLE_CATALOG).map(make => `<option value="${make}" ${vehicle.make === make ? 'selected' : ''}>${make}</option>`).join('')}
+                                    </select>
+                                </label>
+                                <label>Model
+                                    <select aria-label="Vehicle model" onchange="updateVehicleSelection('model', this.value)" ${vehicle.make ? '' : 'disabled'}>
+                                        <option value="">Select model</option>
+                                        ${modelOptions.map(model => `<option value="${model}" ${vehicle.model === model ? 'selected' : ''}>${model}</option>`).join('')}
+                                    </select>
+                                </label>
+                                <label>Year
+                                    <select aria-label="Vehicle year" onchange="updateVehicleSelection('year', this.value)">
+                                        <option value="">Year</option>
+                                        ${VEHICLE_YEARS.map(year => `<option value="${year}" ${String(vehicle.year) === String(year) ? 'selected' : ''}>${year}</option>`).join('')}
+                                    </select>
+                                </label>
+                            </div>
+                            <p class="fitment-note">Fitment data is limited. Unverified parts are not confirmed to fit.</p>
+                        </div>
+                        <div class="build-summary">
+                            <div class="build-summary-heading">Build summary</div>
+                            <div class="summary-row"><span>Vehicle</span><strong>${vehicle.make && vehicle.model && vehicle.year ? `${vehicle.year} ${vehicle.make} ${vehicle.model}` : 'Not selected'}</strong></div>
+                            <div class="summary-row"><span>Body color</span><strong id="buildColorValue">${(car.color || '#556B2F').toUpperCase()}</strong></div>
+                            <label class="color-picker-row">Change color
+                                <input type="color" value="${car.color || '#556B2F'}" aria-label="Build body color" onchange="updateBuildColor(this.value)">
+                            </label>
+                            <div class="summary-row"><span>Installed parts</span><strong>${installedParts.length}</strong></div>
+                            <div class="summary-cost"><span>Estimated parts total</span><strong>${formatCurrency(estimate.low)}–${formatCurrency(estimate.high)}</strong></div>
+                            <p class="estimate-disclaimer">Rough planning range in USD; labor, fitment, and supplier pricing are not included.</p>
                         </div>
                         
                         <div class="preview-parts-list">
-                            <h4>Installed Parts (${Object.values(car.parts).flat().length})</h4>
-                            ${Object.keys(car.parts).length === 0 ? `
+                            <h4>Installed Parts (${installedParts.length})</h4>
+                            ${Object.keys(car.parts || {}).length === 0 ? `
                                 <p style="color: #d0d0d0; font-size: 0.9rem;">Select parts from categories to add to your car</p>
                             ` : `
-                                ${Object.entries(car.parts).map(([category, parts]) => `
+                                ${Object.entries(car.parts || {}).map(([category, parts]) => `
                                     <div style="margin-bottom: 15px;">
                                         <h5 style="color: #6B8E23; font-size: 0.95rem; margin-bottom: 8px;">${category}</h5>
                                         ${parts.map((part, idx) => `
@@ -1427,6 +1610,7 @@ function render(page = null) {
     }
     
     root.innerHTML = (currentUser ? renderAppHeader() : '') + content;
+    if (document.querySelector('.parts-grid')) filterPartsCatalog();
 
     // Close dropdown when clicking elsewhere
     document.addEventListener('click', (e) => {
