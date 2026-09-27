@@ -102,6 +102,8 @@ h1, h2, h3, h4 { line-height: 1.05; }
 .guide-step p { margin-top: 8px; color: var(--muted); font-size: .92rem; }
 .guide-navigation, .enthusiast-buttons { display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-top: 32px; }
 .guide-nav-btn, .action-btn { padding: 13px 18px; background: var(--brass); color: var(--ink); }
+.guide-download-btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 1px solid var(--acid); background: transparent; color: var(--paper); }
+.guide-download-btn:hover { background: rgba(99,119,53,.28); color: var(--acid); }
 .guide-nav-btn.back, .action-btn.secondary { background: transparent; border: 1px solid var(--line); color: var(--paper); }
 .skip-guide-btn { color: var(--danger) !important; border-color: #D4AF37 !important; }
 .progress-indicator { color: var(--muted); font: .7rem 'DM Mono', monospace; text-transform: uppercase; }
