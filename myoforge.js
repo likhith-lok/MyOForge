@@ -640,6 +640,7 @@ let currentCategory = null;
 let catalogSearchQuery = '';
 let catalogInstallFilter = 'all';
 let createCarDialogTrigger = null;
+let activeCarPreview = null;
 
 const VEHICLE_CATALOG = {
     Acura: { 'Integra': 'combustion', 'MDX': 'combustion', 'NSX': 'hybrid', 'RDX': 'combustion', 'TLX': 'combustion' },
@@ -865,6 +866,7 @@ function updateBuildColor(color) {
     car.color = color;
     const preview = document.querySelector('.car-preview');
     if (preview) preview.style.setProperty('--build-color', color);
+    activeCarPreview?.setColor(color);
     const colorValue = document.getElementById('buildColorValue');
     if (colorValue) colorValue.textContent = color.toUpperCase();
 }
@@ -911,6 +913,219 @@ function filterPartsCatalog() {
     if (count) count.textContent = `${visibleCount} shown`;
     const empty = document.getElementById('catalogEmptyState');
     if (empty) empty.hidden = visibleCount > 0;
+}
+
+function createCarPreview() {
+    const stage = document.querySelector('.car-preview-stage');
+    const canvas = stage?.querySelector('canvas');
+    if (!stage || !canvas || !window.THREE) {
+        if (stage) stage.querySelector('.car-preview-fallback').hidden = false;
+        return null;
+    }
+
+    const THREE = window.THREE;
+    let renderer;
+    try {
+        renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    } catch {
+        stage.querySelector('.car-preview-fallback').hidden = false;
+        return null;
+    }
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+    camera.position.set(4.8, 3.25, 6.3);
+    camera.lookAt(0, 0.72, 0);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setClearColor(0x000000, 0);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+
+    scene.add(new THREE.HemisphereLight(0xe4edcf, 0x202921, 2.1));
+    const keyLight = new THREE.DirectionalLight(0xfff0d2, 3.2);
+    keyLight.position.set(-3, 7, 5);
+    scene.add(keyLight);
+    const rimLight = new THREE.DirectionalLight(0xb8d87a, 2.2);
+    rimLight.position.set(4, 3, -5);
+    scene.add(rimLight);
+
+    const car = new THREE.Group();
+    scene.add(car);
+    const paint = new THREE.MeshPhysicalMaterial({ color: document.querySelector('.car-preview')?.style.getPropertyValue('--build-color') || '#556B2F', metalness: 0.58, roughness: 0.24, clearcoat: 0.9, clearcoatRoughness: 0.16 });
+    paint.userData.isBuildPaint = true;
+    const glass = new THREE.MeshPhysicalMaterial({ color: 0x172624, metalness: 0.42, roughness: 0.14, clearcoat: 0.7, transparent: true, opacity: 0.92, side: THREE.DoubleSide });
+    const dark = new THREE.MeshStandardMaterial({ color: 0x111512, roughness: 0.76, metalness: 0.12 });
+    const rubber = new THREE.MeshStandardMaterial({ color: 0x151817, roughness: 0.84 });
+    const alloy = new THREE.MeshStandardMaterial({ color: 0xc7c9b9, metalness: 0.86, roughness: 0.24 });
+    const lamp = new THREE.MeshStandardMaterial({ color: 0xe8eccf, emissive: 0xc3d99a, emissiveIntensity: 0.65 });
+    const tailLamp = new THREE.MeshStandardMaterial({ color: 0xa63d2e, emissive: 0x761b12, emissiveIntensity: 0.45 });
+
+    const profile = new THREE.Shape();
+    profile.moveTo(-2.12, 0.48);
+    profile.lineTo(-2.02, 0.82);
+    profile.quadraticCurveTo(-1.9, 0.98, -1.56, 1.02);
+    profile.lineTo(-0.92, 1.04);
+    profile.lineTo(-0.42, 1.62);
+    profile.quadraticCurveTo(-0.16, 1.84, 0.25, 1.8);
+    profile.lineTo(0.76, 1.72);
+    profile.quadraticCurveTo(1.03, 1.67, 1.2, 1.42);
+    profile.lineTo(1.55, 1.05);
+    profile.lineTo(1.88, 0.96);
+    profile.quadraticCurveTo(2.05, 0.88, 2.1, 0.65);
+    profile.lineTo(2.08, 0.48);
+    profile.closePath();
+
+    const bodyGeometry = new THREE.ExtrudeGeometry(profile, { depth: 1.52, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.055, bevelThickness: 0.045, curveSegments: 10 });
+    bodyGeometry.translate(0, 0, -0.76);
+    const body = new THREE.Mesh(bodyGeometry, paint);
+    body.castShadow = true;
+    body.receiveShadow = true;
+    car.add(body);
+
+    const windowShape = new THREE.Shape();
+    windowShape.moveTo(-0.78, 1.13);
+    windowShape.lineTo(-0.32, 1.64);
+    windowShape.quadraticCurveTo(-0.12, 1.76, 0.2, 1.72);
+    windowShape.lineTo(0.66, 1.65);
+    windowShape.lineTo(1.02, 1.15);
+    windowShape.closePath();
+    const windowGeometry = new THREE.ExtrudeGeometry(windowShape, { depth: 0.026, bevelEnabled: false });
+    windowGeometry.translate(0, 0, 0.82);
+    const sideWindows = new THREE.Mesh(windowGeometry, glass);
+    car.add(sideWindows);
+    const oppositeWindows = new THREE.Mesh(windowGeometry, glass);
+    oppositeWindows.scale.z = -1;
+    oppositeWindows.position.z = 0;
+    car.add(oppositeWindows);
+
+    const roofShape = new THREE.Shape();
+    roofShape.moveTo(-0.38, 1.69);
+    roofShape.quadraticCurveTo(-0.12, 1.87, 0.25, 1.82);
+    roofShape.lineTo(0.63, 1.75);
+    roofShape.lineTo(0.77, 1.65);
+    roofShape.lineTo(-0.3, 1.65);
+    roofShape.closePath();
+    const roofGeometry = new THREE.ExtrudeGeometry(roofShape, { depth: 1.28, bevelEnabled: true, bevelSegments: 2, bevelSize: 0.025, bevelThickness: 0.025 });
+    roofGeometry.translate(0, 0, -0.64);
+    car.add(new THREE.Mesh(roofGeometry, paint));
+
+    const addBox = (width, height, depth, material, x, y, z, parent = car) => {
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), material);
+        mesh.position.set(x, y, z);
+        mesh.castShadow = true;
+        parent.add(mesh);
+        return mesh;
+    };
+    addBox(3.48, 0.12, 1.32, dark, 0, 0.49, 0);
+    addBox(0.16, 0.17, 0.74, dark, 2.085, 0.63, 0);
+    addBox(0.035, 0.11, 0.42, lamp, 2.02, 0.82, 0.45);
+    addBox(0.035, 0.11, 0.42, lamp, 2.02, 0.82, -0.45);
+    addBox(0.04, 0.12, 0.42, tailLamp, -2.02, 0.81, 0.46);
+    addBox(0.04, 0.12, 0.42, tailLamp, -2.02, 0.81, -0.46);
+
+    [-1.28, 1.28].forEach(x => [-1, 1].forEach(side => {
+        const wheel = new THREE.Group();
+        wheel.position.set(x, 0.52, side * 0.77);
+        wheel.rotation.x = Math.PI / 2;
+        const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.43, 0.43, 0.22, 32), rubber);
+        tire.castShadow = true;
+        wheel.add(tire);
+        const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.255, 0.255, 0.232, 24), alloy);
+        wheel.add(rim);
+        const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.24, 16), dark);
+        wheel.add(hub);
+        for (let spoke = 0; spoke < 5; spoke += 1) {
+            const bar = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.39, 0.035), alloy);
+            bar.rotation.z = (Math.PI * 2 * spoke) / 5;
+            bar.position.z = side * 0.015;
+            wheel.add(bar);
+        }
+        car.add(wheel);
+    }));
+
+    const floor = new THREE.Mesh(new THREE.CircleGeometry(3.3, 64), new THREE.MeshBasicMaterial({ color: 0x849265, transparent: true, opacity: 0.08 }));
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = 0.015;
+    scene.add(floor);
+
+    let rotation = 0.58;
+    let dragging = false;
+    let previousX = 0;
+    let autoRotate = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let animationFrame = 0;
+    const resize = new ResizeObserver(entries => {
+        const { width, height } = entries[0].contentRect;
+        if (!width || !height) return;
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+    });
+    resize.observe(stage);
+
+    const onPointerDown = event => {
+        dragging = true;
+        previousX = event.clientX;
+        stage.classList.add('is-dragging');
+        canvas.setPointerCapture(event.pointerId);
+    };
+    const onPointerMove = event => {
+        if (!dragging) return;
+        rotation += (event.clientX - previousX) * 0.012;
+        previousX = event.clientX;
+    };
+    const onPointerUp = () => {
+        dragging = false;
+        stage.classList.remove('is-dragging');
+    };
+    canvas.addEventListener('pointerdown', onPointerDown);
+    canvas.addEventListener('pointermove', onPointerMove);
+    canvas.addEventListener('pointerup', onPointerUp);
+    canvas.addEventListener('pointercancel', onPointerUp);
+
+    const rotateButton = stage.querySelector('[data-preview-rotate]');
+    const resetButton = stage.querySelector('[data-preview-reset]');
+    const updateRotateButton = () => {
+        rotateButton.classList.toggle('is-active', autoRotate);
+        rotateButton.setAttribute('aria-label', autoRotate ? 'Pause automatic rotation' : 'Start automatic rotation');
+        rotateButton.title = autoRotate ? 'Pause automatic rotation' : 'Start automatic rotation';
+        rotateButton.innerHTML = `<i class="fas ${autoRotate ? 'fa-pause' : 'fa-play'}" aria-hidden="true"></i>`;
+    };
+    const onRotate = () => { autoRotate = !autoRotate; updateRotateButton(); };
+    const onReset = () => { rotation = 0.58; camera.position.set(4.8, 3.25, 6.3); camera.lookAt(0, 0.72, 0); };
+    rotateButton.addEventListener('click', onRotate);
+    resetButton.addEventListener('click', onReset);
+    updateRotateButton();
+
+    const animate = () => {
+        animationFrame = window.requestAnimationFrame(animate);
+        if (autoRotate && !dragging) rotation += 0.003;
+        car.rotation.y = rotation;
+        renderer.render(scene, camera);
+    };
+    animate();
+
+    return {
+        setColor(color) {
+            paint.color.set(color);
+        },
+        destroy() {
+            window.cancelAnimationFrame(animationFrame);
+            resize.disconnect();
+            canvas.removeEventListener('pointerdown', onPointerDown);
+            canvas.removeEventListener('pointermove', onPointerMove);
+            canvas.removeEventListener('pointerup', onPointerUp);
+            canvas.removeEventListener('pointercancel', onPointerUp);
+            rotateButton.removeEventListener('click', onRotate);
+            resetButton.removeEventListener('click', onReset);
+            renderer.dispose();
+            scene.traverse(object => {
+                if (object.geometry) object.geometry.dispose();
+                if (object.material && object.material !== paint && object.material !== glass && object.material !== dark && object.material !== rubber && object.material !== alloy && object.material !== lamp && object.material !== tailLamp) object.material.dispose();
+            });
+            [paint, glass, dark, rubber, alloy, lamp, tailLamp].forEach(material => material.dispose());
+        }
+    };
 }
 
 // Component Rendering Functions
@@ -1232,8 +1447,16 @@ function renderCarBuilder() {
                     <div class="car-preview-section" id="buildSummary" tabindex="-1">
                         <div class="preview-title">Your Build</div>
                         <div class="car-preview" style="--build-color: ${car.color || '#556B2F'}">
-                            <i class="fas fa-car-side" aria-hidden="true"></i>
-                            <span>${escapeHtml(car.name)}</span>
+                            <div class="car-preview-stage" aria-label="Interactive three-dimensional car preview">
+                                <canvas class="car-preview-canvas" aria-label="Three-dimensional preview of ${escapeHtml(car.name)}" role="img"></canvas>
+                                <div class="car-preview-fallback" hidden><i class="fas fa-car-side" aria-hidden="true"></i><span>3D preview unavailable</span></div>
+                                <div class="car-preview-controls">
+                                    <button type="button" class="preview-control is-active" data-preview-rotate aria-label="Pause automatic rotation" title="Pause automatic rotation"><i class="fas fa-pause" aria-hidden="true"></i></button>
+                                    <button type="button" class="preview-control" data-preview-reset aria-label="Reset 3D view" title="Reset view"><i class="fas fa-expand" aria-hidden="true"></i></button>
+                                </div>
+                                <span class="preview-drag-hint">Drag to rotate</span>
+                            </div>
+                            <span class="car-preview-name">${escapeHtml(car.name)}</span>
                         </div>
                         <div class="vehicle-selectors">
                             <div class="vehicle-section-title">Base vehicle</div>
@@ -1520,6 +1743,8 @@ function render(page = null) {
     }
     
     root.innerHTML = (currentUser ? renderAppHeader() : '') + renderStorageNotice() + content;
+    activeCarPreview?.destroy();
+    activeCarPreview = createCarPreview();
     if (document.querySelector('.parts-grid')) filterPartsCatalog();
 
 }

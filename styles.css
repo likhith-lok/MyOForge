@@ -184,9 +184,20 @@ h1, h2, h3, h4 { line-height: 1.05; }
 .part-add-btn { margin-top: auto; padding: 10px; border: 0; background: var(--acid); color: var(--ink); cursor: pointer; font-weight: 800; }
 .part-add-btn:disabled { background: rgba(239,141,118,.25); color: var(--paper); cursor: not-allowed; }
 .preview-title { color: var(--acid); font: 500 .72rem 'DM Mono', monospace; text-transform: uppercase; }
-.car-preview { margin: 16px 0; aspect-ratio: 4/2.5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; overflow: hidden; background: radial-gradient(ellipse at 50% 75%, rgba(215,233,139,.14), transparent 55%), linear-gradient(145deg, var(--panel-light), var(--ink-soft)); border: 1px solid var(--line); color: var(--build-color, var(--olive)); }
-.car-preview i { font-size: 5rem; filter: drop-shadow(0 10px 8px rgba(0,0,0,.45)); transition: color 180ms ease; }
-.car-preview span { max-width: 90%; overflow: hidden; color: var(--muted); font: .62rem 'DM Mono', monospace; text-overflow: ellipsis; white-space: nowrap; text-transform: uppercase; }
+.car-preview { margin: 14px 0; padding: 10px; border: 1px solid var(--line); background: radial-gradient(ellipse at 50% 70%, rgba(215,233,139,.12), transparent 58%), linear-gradient(145deg, var(--panel-light), var(--ink-soft)); }
+.car-preview-stage { position: relative; height: clamp(190px, 18vw, 270px); min-height: 180px; overflow: hidden; touch-action: pan-y; cursor: grab; }
+.car-preview-stage.is-dragging { cursor: grabbing; }
+.car-preview-canvas { display: block; width: 100%; height: 100%; }
+.car-preview-fallback { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--build-color, var(--olive)); }
+.car-preview-fallback[hidden] { display: none; }
+.car-preview-fallback i { font-size: 4rem; }
+.car-preview-fallback span, .car-preview-name { color: var(--muted); font: .62rem 'DM Mono', monospace; text-overflow: ellipsis; text-transform: uppercase; }
+.car-preview-name { display: block; max-width: 100%; overflow: hidden; padding: 3px 6px 0; text-align: center; white-space: nowrap; }
+.car-preview-controls { position: absolute; top: 9px; right: 9px; z-index: 1; display: flex; gap: 6px; }
+.preview-control { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line); background: rgba(16,22,18,.78); color: var(--paper); cursor: pointer; }
+.preview-control:hover, .preview-control.is-active { border-color: var(--acid); color: var(--acid); }
+.preview-control:focus-visible { outline: 2px solid var(--acid); outline-offset: 2px; }
+.preview-drag-hint { position: absolute; bottom: 8px; left: 10px; padding: 4px 7px; background: rgba(16,22,18,.7); color: var(--muted); font: .58rem 'DM Mono', monospace; text-transform: uppercase; }
 .vehicle-selectors, .build-summary { margin-top: 17px; padding-top: 15px; border-top: 1px solid var(--line); }
 .vehicle-section-title, .build-summary-heading { margin-bottom: 10px; color: var(--acid); font: 500 .68rem 'DM Mono', monospace; text-transform: uppercase; }
 .vehicle-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -259,6 +270,6 @@ h1, h2, h3, h4 { line-height: 1.05; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .part-tile-inner, .car-preview i { transition-duration: .01ms; }
+    .part-tile-inner { transition-duration: .01ms; }
     .part-tile:hover .part-tile-inner, .part-tile:focus-within .part-tile-inner, .part-tile.details-open .part-tile-inner { transition-duration: .01ms; }
 }
