@@ -36,16 +36,14 @@ Your automotive customization platform is fully built, documented, and ready to 
 ###  Landing Page
 - Olive green theme with gradient backgrounds
 - Enthusiast-only workshop with optional onboarding guide
-- Information about changing role in future
-- Gmail OAuth-style authentication
+- No-account guest entry
+- Session-only builds with JSON downloads
 - Professional, modern design
 
-###  User Authentication
-- Simulated Gmail login
-- User profile with email display
-- Role management
-- Logout functionality
-- Session persistence
+###  Guest Workshop
+- No sign-up, verification, or backend
+- Builds remain in memory while the page is open
+- Database support for saved cars is coming soon
 
 ###  Enthusiast Onboarding
 - Quick-start options: "I Got This" & "Show Me Around"
@@ -83,11 +81,9 @@ Your automotive customization platform is fully built, documented, and ready to 
 - Car cards with statistics
 
 ###  Data Persistence
-- LocalStorage implementation
-- User profile saving
-- Car build persistence
-- Automatic syncing
-- Data survives browser refresh
+- In-memory session builds
+- Download builds as portable JSON files
+- Refreshing or closing the page clears the current session
 
 ###  Responsive Design
 - Desktop (1024px+)
@@ -115,31 +111,31 @@ Your automotive customization platform is fully built, documented, and ready to 
 
 ### Quick Start (30 seconds)
 1. Open `index.html` in your browser
-2. Click "Sign in with Gmail"
+2. Click "Start building" (no account required)
 3. Choose the quick start or optional guide
 4. Create a build in the garage
 6. Browse parts, hover to see details
 7. Click to add parts to your car
-8. Save your build
+8. Download a JSON copy to keep your build
 
 ### First Build Workflow
 ```
-Landing → Login → Role Select → Onboarding → Car Garage → Create Car → 
+Landing → Guest Session → Onboarding → Car Garage → Create Car →
 Builder → Select Category → Browse Parts → Hover (Flip Animation) → 
-Add Parts → Preview Updates → Save Build
+Add Parts → Preview Updates → Download Build
 ```
 
 ### Subsequent Visits
 ```
-Landing → Auto-Login (from localStorage) → Car Garage → 
-Edit Existing or Create New → Build → Save
+Landing → Start Guest Session → Car Garage →
+Edit Existing or Create New → Build → Download
 ```
 
 ##  Technology Stack
 
 - **Language:** JavaScript (Vanilla ES6+)
 - **Styling:** CSS3 with animations and gradients
-- **Storage:** LocalStorage (Firebase-ready)
+- **Storage:** In-memory guest session with JSON build export
 - **Icons:** FontAwesome 6.4.0
 - **Fonts:** Google Fonts (Inter, Outfit)
 - **Browser:** Modern browsers (Chrome, Firefox, Safari, Edge)
@@ -164,7 +160,7 @@ Edit Existing or Create New → Build → Save
 - **Page Load:** <1 second
 - **Animation Frame Rate:** 60 FPS
 - **File Size:** 115 KB total
-- **LocalStorage:** ~50 KB per user
+- **Persistence:** Session-only until database support arrives
 
 ##  User Journeys
 
@@ -177,9 +173,9 @@ Edit Existing or Create New → Build → Save
    └─ "Show Me Around" → Enthusiast Guide → Builder
 ```
 
-### Returning User
+### Returning Visitor
 ```
-1. Auto-Login (via localStorage)
+1. Start a new guest session
    ↓
 2. Car Garage (View All Cars)
    ↓
@@ -187,22 +183,10 @@ Edit Existing or Create New → Build → Save
    ↓
 4. Builder (Customize)
    ↓
-5. Save & Exit
+5. Download builds before exiting
 ```
 
 ##  Data Structure
-
-### User Object
-```javascript
-{
-  id: "unique-id",
-  email: "user@gmail.com",
-  name: "Display Name",
-   role: "enthusiast",
-  preferences: { theme, notifications },
-  cars: [...]
-}
-```
 
 ### Car Object
 ```javascript
@@ -386,7 +370,7 @@ Edit Existing or Create New → Build → Save
 - GitHub-ready structure
 
 ### Scalable Foundation
-- Firebase integration ready
+- No backend; database persistence is a future enhancement
 - Modular code structure
 - Performance optimized
 - Production-ready code

@@ -5,10 +5,11 @@ MyoForge is a next-generation automotive customization platform enabling users t
 
 ## Core Features Implemented
 
-### 1. Landing Page & Authentication
+### 1. Landing Page & Guest Entry
 - Olive, brass, and acid-green studio palette with grid texture
-- Gmail-style demo sign-in backed by localStorage; real OAuth requires project credentials
+- Immediate anonymous access; no sign-in, account creation, or verification
 - Enthusiast-only access to the complete customization catalog
+- In-memory builds with JSON download; database support is coming soon
 - Responsive design
 
 ### 2. Enthusiast Onboarding
@@ -41,8 +42,8 @@ MyoForge is a next-generation automotive customization platform enabling users t
 ## Technical Stack
 - **Frontend:** Vanilla JavaScript served from a single HTML entry point
 - **Styling:** Custom CSS with responsive layouts and 3D flip transforms
-- **Authentication:** Local demo session; Firebase/Google OAuth is a production integration step
-- **Persistence:** Browser localStorage for profiles and multiple car builds
+- **Authentication:** None; guests start building immediately
+- **Persistence:** In-memory session only; builds can be downloaded as JSON
 - **Images:** Remote Unsplash automotive imagery for the prototype
 
 ## File Structure
@@ -136,14 +137,14 @@ MyoForge/
 - **Error/Alert:** #E74C3C
 
 ## User Workflow
-1. Sign in → Choose "I got this" or "Show me around"
-2. Access Car Garage → Create new car or edit existing
+1. Start building without an account → Choose "I got this" or "Show me around"
+2. Access temporary Car Garage → Create or edit a build
 3. Select major car section
 4. Browse parts in that section
 5. Hover on part → See description
 6. Click part → Add to car
 7. Continue customizing until satisfied
-8. Save car to profile
+8. Download build JSON to keep a copy
 9. View 3D preview (future enhancement)
 10. Share with community (future enhancement)
 

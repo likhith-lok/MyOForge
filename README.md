@@ -11,10 +11,10 @@ MyoForge is a cutting-edge automotive customization platform that empowers users
 ###  Core Features
 - **Complete Vehicle Customization:** Explore 30 logical vehicle systems spanning powertrain, chassis, body, cabin, electronics, safety, EV hardware, utility, recovery, and track equipment
 - **Enthusiast Workshop:** Access the complete component catalog with optional guided onboarding
-- **Multiple Car Builds:** Create unlimited custom cars and explore different build philosophies
+- **Guest Sessions:** Start building immediately with no account or verification
 - **Real-Time Preview:** See your customizations instantly as you add or remove parts
-- **Persistent Storage:** All builds are saved to your profile
-- **Gmail Entry:** Gmail-styled local demo sign-in; connect Firebase Google OAuth for production accounts
+- **Build Downloads:** Export any build as a portable JSON file
+- **Temporary Garage:** Builds last for the current session; a car database is coming soon
 
 ### 👥 Onboarding
 
@@ -41,8 +41,8 @@ Every component includes its own name, image assignment, function summary, signi
 ### Tech Stack
 - **Frontend:** Vanilla JavaScript with modern ES6+
 - **Styling:** Custom CSS3 with animations and gradients
-- **Storage:** LocalStorage for demo (Firebase ready for production)
-- **Authentication:** Simulated Gmail OAuth (Firebase Auth ready)
+- **Storage:** In-memory guest session; no backend or account system
+- **Authentication:** None
 - **Icons:** FontAwesome 6.4.0
 - **Fonts:** Google Fonts (Manrope, DM Mono)
 
@@ -61,9 +61,9 @@ MyoForge/
 ### Quick Start
 1. Clone or download the repository
 2. Open `index.html` in a modern web browser
-3. Sign in with Gmail (simulated)
+3. Click **Start building**; no account is required
 4. Choose the quick start or optional guide
-5. Create a build and customize it
+5. Create a build, customize it, and download a copy to keep it
 
 ### Browser Requirements
 - Chrome/Edge (latest)
@@ -75,18 +75,18 @@ MyoForge/
 
 ### New User
 ```
-Landing Page → Sign In → Choose "I Got This" or "Show Me Around" → Build
+Landing Page → Start Building → Choose "I Got This" or "Show Me Around" → Build
 ```
 
 ### Returning User
 ```
-Login → My Garage (view all cars) → Select car to edit → Customize parts → Save
+Start Workshop → My Garage (current session) → Select a build → Customize parts → Download
 ```
 
 ### Car Builder Workflow
 ```
 Create Car → Select Category → Browse Parts → Hover for Info → Click Add → 
-Preview Updates → Continue Customizing → Save Build
+Preview Updates → Continue Customizing → Download Build
 ```
 
 ##  Interaction Guide
@@ -101,12 +101,12 @@ Preview Updates → Continue Customizing → Save Build
 1. **Create:** Click "New Car Build" to start a new customization
 2. **Edit:** Click "Edit" on any car card to modify
 3. **Delete:** Remove cars you no longer want
-4. **Save:** Changes are auto-saved and persisted
+4. **Download:** Export a JSON copy to keep your build beyond this session
 
-### Profile Features
-1. **View Profile:** See email and account information
-2. **Replay Guide:** Reopen the optional enthusiast tour
-3. **Logout:** Sign out and return to landing page
+### Session Features
+1. **No account:** Enter the workshop without signup or verification
+2. **Download:** Save a JSON copy of any build
+3. **Exit:** Clear the current in-memory session
 
 ##  Design System
 
@@ -128,41 +128,9 @@ Preview Updates → Continue Customizing → Save Build
 - **Entrance:** fadeIn, fadeInDown, fadeInUp, slideInRight
 - **Performance:** GPU-optimized with transform and opacity
 
-##  Data Persistence
+## Build Data
 
-### LocalStorage Structure
-```javascript
-{
-  myoforge_user: {
-    id: string,
-    email: string,
-    name: string,
-    role: "enthusiast",
-    preferences: { theme, notifications },
-    cars: [
-      {
-        id: string,
-        name: string,
-        createdAt: ISO8601,
-        parts: { category: [parts] },
-        color: hex
-      }
-    ]
-  }
-}
-```
-
-##  Production Readiness
-
-### Currently Simulated (Demo)
-- Gmail OAuth authentication
-- Cloud database storage
-
-### Ready for Firebase Integration
-- User profile management
-- Real-time data sync
-- Cloud storage for car builds
-- Analytics and user tracking
+Builds exist only in memory while the page is open. Use **Download Build** to export a portable `.myoforge.json` file. Refreshing or closing the page clears session builds. A database for saving and restoring cars is coming soon.
 
 ### Future Enhancements
 - 3D vehicle visualization (Three.js)
@@ -192,9 +160,9 @@ Preview Updates → Continue Customizing → Save Build
 ##  Known Limitations (Demo Version)
 
 - Part images are icons (ready for real images)
-- Gmail login is simulated (ready for Firebase Auth)
+- No backend, sign-in, or verification is used
+- Builds are temporary until downloaded
 - No real 3D visualization (placeholder ready for Three.js)
-- LocalStorage only (scales to Firestore)
 
 ##  License
 

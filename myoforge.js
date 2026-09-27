@@ -634,7 +634,6 @@ function getVisibleParts(category) {
 
 // Application State
 let currentUser = null;
-let userPreferences = {};
 let userCars = [];
 let currentCarId = null;
 let currentCategory = null;
@@ -738,40 +737,6 @@ function escapeHtml(value) {
     })[character]);
 }
 
-// Initialize Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyD3j8qXqZ7w8kL9m2n3o4p5q6r7s8t9u",
-    authDomain: "myoforge-app.firebaseapp.com",
-    projectId: "myoforge-app",
-    storageBucket: "myoforge-app.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123456789:web:abc123def456"
-};
-
-// Note: In production, use actual Firebase config
-// For demo, we'll use localStorage
-
-// Utility Functions
-function saveToLocalStorage(key, data) {
-    try {
-        localStorage.setItem(key, JSON.stringify(data));
-        return true;
-    } catch (e) {
-        console.error('localStorage save failed:', e);
-        return false;
-    }
-}
-
-function getFromLocalStorage(key) {
-    try {
-        const data = localStorage.getItem(key);
-        return data ? JSON.parse(data) : null;
-    } catch (e) {
-        console.error('localStorage read failed:', e);
-        return null;
-    }
-}
-
 function generateId() {
     return 'id-' + Math.random().toString(36).substr(2, 9);
 }
@@ -804,44 +769,9 @@ function showMessage(text, type = 'info') {
     }, 4000);
 }
 
-// Authentication Functions
-function initAuth() {
-    const savedUser = getFromLocalStorage('myoforge_user');
-    if (savedUser) {
-        currentUser = savedUser;
-        currentUser.role = 'enthusiast';
-        userPreferences = savedUser.preferences || {};
-        userCars = savedUser.cars || [];
-        saveToLocalStorage('myoforge_user', currentUser);
-    }
-}
-
-function simulateGmailLogin() {
-    // Simulate Gmail OAuth login
-    const user = {
-        id: generateId(),
-        email: 'user' + Math.floor(Math.random() * 10000) + '@gmail.com',
-        name: 'Car Enthusiast',
-        role: 'enthusiast',
-        preferences: {
-            theme: 'dark',
-            notifications: true
-        },
-        cars: []
-    };
-    
-    currentUser = user;
-    const saved = saveToLocalStorage('myoforge_user', user);
-    showMessage(saved ? 'Successfully logged in with Gmail!' : 'Signed in, but this browser could not save your profile.', saved ? 'success' : 'warning');
-    return user;
-}
-
-function logout() {
-    currentUser = null;
+function startGuestSession() {
+    currentUser = { id: generateId(), name: 'Guest Enthusiast' };
     userCars = [];
-    localStorage.removeItem('myoforge_user');
-    showMessage('Logged out successfully', 'info');
-    render();
 }
 
 // Onboarding Entry
@@ -859,13 +789,7 @@ function createNewCar(carName) {
     userCars.push(newCar);
     currentCarId = newCar.id;
     
-    let saved = true;
-    if (currentUser) {
-        currentUser.cars = userCars;
-        saved = saveToLocalStorage('myoforge_user', currentUser);
-    }
-    
-    showMessage(saved ? `Car "${newCar.name}" created!` : `Car "${newCar.name}" created, but could not be saved in this browser.`, saved ? 'success' : 'warning');
+    showMessage(`Build "${newCar.name}" is ready. Download a copy to keep it.`, 'success');
     return newCar;
 }
 
@@ -875,13 +799,7 @@ function deleteCar(carId) {
         currentCarId = null;
     }
     
-    let saved = true;
-    if (currentUser) {
-        currentUser.cars = userCars;
-        saved = saveToLocalStorage('myoforge_user', currentUser);
-    }
-    
-    showMessage(saved ? 'Car deleted' : 'Car deleted for this session, but the change could not be saved.', saved ? 'info' : 'warning');
+    showMessage('Build removed from this session.', 'info');
     render();
 }
 
@@ -910,13 +828,7 @@ function addPartToCar(partId, category) {
         }
         car.parts[category].push(part);
         
-        let saved = true;
-        if (currentUser) {
-            currentUser.cars = userCars;
-            saved = saveToLocalStorage('myoforge_user', currentUser);
-        }
-        
-        showMessage(saved ? `Added ${part.name} to your car!` : `${part.name} was added for this session, but the change could not be saved.`, saved ? 'success' : 'warning');
+        showMessage(`Added ${part.name} to your build.`, 'success');
         render();
     }
 }
@@ -934,24 +846,8 @@ function removePartFromCar(partIndex, category) {
 
     car.parts[category].splice(partIndex, 1);
 
-    let saved = true;
-    if (currentUser) {
-        currentUser.cars = userCars;
-        saved = saveToLocalStorage('myoforge_user', currentUser);
-    }
-
-    showMessage(saved ? 'Part removed' : 'Part removed for this session, but the change could not be saved.', saved ? 'info' : 'warning');
+    showMessage('Part removed from your build.', 'info');
     render();
-}
-
-function saveCar() {
-    if (!currentUser) {
-        showMessage('Sign in before saving your build.', 'error');
-        return;
-    }
-    currentUser.cars = userCars;
-    const saved = saveToLocalStorage('myoforge_user', currentUser);
-    showMessage(saved ? 'Car saved successfully!' : 'Could not save this car in browser storage. Check available storage and try again.', saved ? 'success' : 'error');
 }
 
 function updateVehicleSelection(field, value) {
@@ -960,12 +856,6 @@ function updateVehicleSelection(field, value) {
     car.vehicle = car.vehicle || { make: '', model: '', year: '' };
     car.vehicle[field] = value;
     if (field === 'make') car.vehicle.model = '';
-    let saved = true;
-    if (currentUser) {
-        currentUser.cars = userCars;
-        saved = saveToLocalStorage('myoforge_user', currentUser);
-    }
-    if (!saved) showMessage('Vehicle selection changed, but could not be saved in this browser.', 'warning');
     render('builder');
 }
 
@@ -973,16 +863,36 @@ function updateBuildColor(color) {
     const car = getCurrentCar();
     if (!car) return;
     car.color = color;
-    let saved = true;
-    if (currentUser) {
-        currentUser.cars = userCars;
-        saved = saveToLocalStorage('myoforge_user', currentUser);
-    }
     const preview = document.querySelector('.car-preview');
     if (preview) preview.style.setProperty('--build-color', color);
     const colorValue = document.getElementById('buildColorValue');
     if (colorValue) colorValue.textContent = color.toUpperCase();
-    if (!saved) showMessage('Body color changed, but could not be saved in this browser.', 'warning');
+}
+
+function downloadCar(carId = currentCarId) {
+    const car = userCars.find(item => item.id === carId);
+    if (!car) {
+        showMessage('Choose a build before downloading it.', 'warning');
+        return;
+    }
+
+    const exportData = {
+        application: 'MyoForge',
+        formatVersion: 1,
+        exportedAt: new Date().toISOString(),
+        car
+    };
+    const safeName = car.name.normalize('NFKD').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase() || 'myoforge-build';
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${safeName}.myoforge.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showMessage(`Downloaded ${car.name}. Keep the file to preserve your build.`, 'success');
 }
 
 function filterPartsCatalog() {
@@ -1006,7 +916,6 @@ function filterPartsCatalog() {
 // Component Rendering Functions
 
 function renderLandingPage() {
-    const signedIn = Boolean(currentUser);
     return `
         <div class="landing-page">
             <nav class="site-nav">
@@ -1023,7 +932,7 @@ function renderLandingPage() {
                     <div class="landing-notes">
                         <div><strong>300</strong> component types</div>
                         <div><strong>INFINITE</strong> build directions</div>
-                        <div><strong>local</strong> private garage</div>
+                        <div><strong>session</strong> only storage</div>
                     </div>
                 </section>
 
@@ -1033,11 +942,11 @@ function renderLandingPage() {
                 </section>
 
                 <section class="entry-panel">
-                    <div class="section-kicker">Enthusiast workshop</div>
+                    <div class="section-kicker">No account needed</div>
                     <h2>Start your build.</h2>
-                    <p>Jump straight into the full vehicle catalog or take a quick tour first.</p>
+                    <p>Explore the full vehicle catalog. Your builds stay in this session unless you download a copy.</p>
                     <br>
-                    <button class="get-started-btn" onclick="${signedIn ? "render('garage')" : 'proceedFromLanding()'}">${signedIn ? 'Enter My Garage' : 'Sign in with Gmail'} <i class="fas fa-arrow-right"></i></button>
+                    <button class="get-started-btn" onclick="proceedFromLanding()">Start building <i class="fas fa-arrow-right"></i></button>
                 </section>
             </div>
 
@@ -1049,7 +958,7 @@ function renderLandingPage() {
                 <div class="landing-feature-grid">
                     <article><i class="fas fa-layer-group"></i><h3>Every layer matters</h3><p>Explore powertrain, structure, cabin, electronics, safety, utility, and finish in one calm workspace.</p></article>
                     <article><i class="fas fa-book-open"></i><h3>Explore the full catalog</h3><p>Move freely across powertrain, structure, cabin, electronics, safety, utility, and competition systems.</p></article>
-                    <article><i class="fas fa-floppy-disk"></i><h3>Your garage, your directions</h3><p>Keep multiple ideas alive locally and return to any build when the next idea arrives.</p></article>
+                    <article><i class="fas fa-download"></i><h3>Take your build with you</h3><p>Download a JSON copy of any build. A database for returning to saved cars is coming soon.</p></article>
                 </div>
             </section>
             <section class="developer-section">
@@ -1057,7 +966,7 @@ function renderLandingPage() {
                     <div class="eyebrow">Behind the forge</div>
                     <h2>Built by a student.</h2>
                 </div>
-                <p>MyoForge is a personal experiment in making automotive knowledge feel tangible. It is designed to give curious people a place to ask “what if?” and turn that question into a considered build.<br></br>It is developed by a high school student with an aim to bring the car community together give them a way of expressing their wildest ideas.<br> </br> Open for collaboration - Contact me! <br> </br> <a href="mailto:likhith.lokanadham@outlook.com" style="color: white;">likhith.lokanadham@outlook.com</a></p>
+                <p>MyoForge is a personal experiment in making automotive knowledge feel tangible. It is designed to give curious people a place to ask “what if?” and turn that question into a considered build.<br><br>Built by a student with an aim to bring the car community together give them a way of expressing their wildest ideas.<br><br>For inquiries, contact the <a href="mailto:likhith.lokanadham@outlook.com">MyoForge team</a>.</p>
             </section>
         </div>
     `;
@@ -1124,8 +1033,8 @@ function renderEnthusiastGuide() {
                     
                     <div class="guide-step">
                         <div class="step-number"</div>
-                        <h3>Save & Iterate</h3>
-                        <p>Save your builds anytime and come back to refine them. Experiment, evolve, and perfect your dream car at your own pace.</p>
+                        <h3>Download & Keep</h3>
+                        <p>Download a JSON copy to keep your build beyond this session. You can continue experimenting here without creating an account.</p>
                     </div>
                 </div>
                 
@@ -1184,6 +1093,7 @@ function renderCarGarage() {
                                     <button class="car-card-btn edit" onclick="editCar('${car.id}')">
                                         <i class="fas fa-edit"></i> Edit
                                     </button>
+                                    <button class="car-card-btn download" onclick="downloadCar('${car.id}')" aria-label="Download ${escapeHtml(car.name)}"><i class="fas fa-download" aria-hidden="true"></i> Download</button>
                                     <button class="car-card-btn delete" onclick="deleteCarConfirm('${car.id}')">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
@@ -1224,8 +1134,8 @@ function renderCarBuilder() {
                         <button class="builder-btn back" onclick="backToGarage()">
                             <i class="fas fa-arrow-left"></i> Back to Garage
                         </button>
-                        <button class="builder-btn save" onclick="saveCar()">
-                            <i class="fas fa-save"></i> Save Car
+                        <button class="builder-btn save" onclick="downloadCar()">
+                            <i class="fas fa-download"></i> Download Build
                         </button>
                     </div>
                 </div>
@@ -1408,54 +1318,42 @@ function renderAppHeader() {
     return `
         <header class="app-header">
             <a class="app-brand" href="#landing" onclick="goBackToLanding()">Myo<span>Forge</span></a>
-            <div class="app-header-meta">vehicle composition studio / enthusiast workshop</div>
+            <div class="app-header-meta">vehicle composition studio / guest session</div>
             <div class="app-header-actions">
                 <button class="header-action" onclick="backToGarage()" aria-label="Open garage" title="Open garage"><i class="fas fa-warehouse" aria-hidden="true"></i><span>Garage</span></button>
                 <button class="header-action primary" onclick="showCreateCarDialog()" aria-label="Create a new build" title="Create a new build"><i class="fas fa-plus" aria-hidden="true"></i><span>New Build</span></button>
                 <button class="header-action" onclick="render('enthusiastGuide')" aria-label="Open workshop guide" title="Open workshop guide"><i class="fas fa-compass" aria-hidden="true"></i><span>Guide</span></button>
-                <button class="header-logout" onclick="logout()" aria-label="Log out" title="Log out"><i class="fas fa-sign-out-alt" aria-hidden="true"></i><span>Log out</span></button>
+                ${currentCarId ? '<button class="header-action" onclick="downloadCar()" aria-label="Download current build" title="Download current build"><i class="fas fa-download" aria-hidden="true"></i><span>Download</span></button>' : ''}
+                <button class="header-logout" onclick="exitWorkshop()" aria-label="Exit workshop" title="Exit workshop"><i class="fas fa-door-open" aria-hidden="true"></i><span>Exit</span></button>
             </div>
         </header>
     `;
 }
 
-function renderAuthSection() {
-    if (!currentUser) {
-        return `
-            <div class="auth-section">
-                <button class="auth-btn" onclick="simulateGmailLogin()">
-                    <i class="fab fa-google"></i> Sign in with Gmail
-                </button>
-            </div>
-        `;
-    } else {
-        return `
-            <div class="auth-section user-menu">
-                <button class="user-profile-btn" onclick="toggleUserMenu()">
-                    ${currentUser.name.charAt(0).toUpperCase()}
-                </button>
-                <div class="user-dropdown" id="userDropdown">
-                    <div style="padding: 10px 20px; border-bottom: 1px solid rgba(107, 142, 35, 0.3); color: #d0d0d0;">
-                        ${currentUser.email}
-                    </div>
-                    <button class="dropdown-item" onclick="replayGuide()">
-                        <i class="fas fa-compass"></i> Replay Guide
-                    </button>
-                    <button class="dropdown-item" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </div>
-            </div>
-        `;
-    }
+function renderStorageNotice() {
+    return `
+        <div class="storage-notice" role="status">
+            <i class="fas fa-database" aria-hidden="true"></i>
+            <span><strong>Car database coming soon.</strong> Builds are temporary in this session; download a JSON copy to keep one.</span>
+        </div>
+    `;
 }
 
 // Navigation & Control Functions
 function proceedFromLanding() {
     if (!currentUser) {
-        simulateGmailLogin();
+        startGuestSession();
     }
     render('enthusiastOnboarding');
+}
+
+function exitWorkshop() {
+    if (userCars.length && !confirm('Exit and clear this session? Download any builds you want to keep first.')) return;
+    currentUser = null;
+    userCars = [];
+    currentCarId = null;
+    currentCategory = null;
+    render('landing');
 }
 
 function goBackToLanding() {
@@ -1613,18 +1511,6 @@ function toggleCategorySidebar() {
     }
 }
 
-function replayGuide() {
-    toggleUserMenu();
-    render('enthusiastGuide');
-}
-
-function toggleUserMenu() {
-    const dropdown = document.getElementById('userDropdown');
-    if (dropdown) {
-        dropdown.classList.toggle('show');
-    }
-}
-
 // Main Render Function
 function render(page = null) {
     const root = document.getElementById('root');
@@ -1645,27 +1531,14 @@ function render(page = null) {
         content = renderCarGarage();
     }
     
-    root.innerHTML = (currentUser ? renderAppHeader() : '') + content;
+    root.innerHTML = (currentUser ? renderAppHeader() : '') + renderStorageNotice() + content;
     if (document.querySelector('.parts-grid')) filterPartsCatalog();
 
-    // Close dropdown when clicking elsewhere
-    document.addEventListener('click', (e) => {
-        const dropdown = document.getElementById('userDropdown');
-        if (dropdown && !e.target.closest('.user-menu')) {
-            dropdown.classList.remove('show');
-        }
-    });
 }
 
 // Initialize App
 function initApp() {
-    initAuth();
-    
-    if (currentUser) {
-        render('garage');
-    } else {
-        render('landing');
-    }
+    render('landing');
 }
 
 // Start the app when DOM is ready

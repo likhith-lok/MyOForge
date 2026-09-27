@@ -5,8 +5,8 @@
 ### 1. **Open the App**
 Simply open `index.html` in your web browser (Chrome, Firefox, Safari, or Edge)
 
-### 2. **Sign In with Gmail**
-Click "Sign in with Gmail" button (simulated for demo)
+### 2. **Start Building**
+Click "Start building". No account, sign-up, or verification is needed.
 
 ### 3. **Choose Your Start**
 - Jump straight to your garage
@@ -28,12 +28,13 @@ Click "Sign in with Gmail" button (simulated for demo)
 | 💾 Multiple Cars | Create unlimited builds |
 | 🎨 Customization | Every single part modifiable |
 | 📋 Real-time Preview | See changes instantly |
-| 💾 Auto-Save | Data persists automatically |
+| ⬇️ Build Export | Download a JSON copy to keep a build |
+| 🗄️ Saved Garage | Database support is coming soon |
 
 ## 🎮 Basic Controls
 
 ### Landing Page
-- Sign in to enter the enthusiast workshop
+- Start building to enter the guest workshop
 
 ### Onboarding
 - Choose "I Got This" to continue directly
@@ -91,11 +92,7 @@ MyoForge features a sophisticated color scheme:
 
 ## 💾 Your Data
 
-All your cars and customizations are saved in your browser's localStorage. This means:
-- ✅ Your data persists when you close the browser
-- ✅ Your data is private and local to your device
-- ✅ No data is sent to any server (demo version)
-- ✅ You can export your builds for sharing (future feature)
+Builds exist only in memory while the page is open. Download each build as a JSON file before closing or refreshing the page. No account or backend is used. A database for saving and restoring cars is coming soon.
 
 ## ⭐ Enthusiast Quick Start
 
@@ -129,9 +126,9 @@ Choose how you want to begin:
 ## 🚨 Troubleshooting
 
 ### "My data disappeared!"
-- Check browser storage settings
-- Clear cache might erase localStorage
-- Data is stored locally per browser/device
+- Builds are temporary and clear when the page is refreshed or closed
+- Download each build as JSON to keep a copy
+- Database support for saved cars is coming soon
 
 ### "Animations look choppy"
 - Try closing other browser tabs
