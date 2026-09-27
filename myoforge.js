@@ -1157,7 +1157,6 @@ function renderCarBuilder() {
                                 <div class="section-kicker">Systems</div>
                                 <strong>Choose an area</strong>
                             </div>
-                            <button class="sidebar-toggle" onclick="toggleCategorySidebar()" aria-label="Collapse systems menu" title="Collapse systems menu"><i class="fas fa-chevron-left"></i></button>
                         </div>
                         <div class="category-list">
                             ${visibleCategories.map(category => `
@@ -1498,17 +1497,6 @@ function goToBuildSummary() {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     summary.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
     summary.focus({ preventScroll: true });
-}
-
-function toggleCategorySidebar() {
-    const sidebar = document.getElementById('categorySidebar');
-    if (!sidebar) return;
-    const collapsed = sidebar.classList.toggle('collapsed');
-    const toggle = sidebar.querySelector('.sidebar-toggle');
-    if (toggle) {
-        toggle.setAttribute('aria-label', collapsed ? 'Expand systems menu' : 'Collapse systems menu');
-        toggle.setAttribute('title', collapsed ? 'Expand systems menu' : 'Collapse systems menu');
-    }
 }
 
 // Main Render Function
