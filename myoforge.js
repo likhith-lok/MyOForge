@@ -1481,17 +1481,12 @@ function renderCarBuilder() {
                                 </label>
                             </div>
                             <p class="fitment-note">Fitment data is limited. Unverified parts are not confirmed to fit.</p>
-                        </div>
-                        <div class="build-summary">
-                            <div class="build-summary-heading">Build summary</div>
-                            <div class="summary-row"><span>Vehicle</span><strong>${vehicle.make && vehicle.model && vehicle.year ? `${vehicle.year} ${vehicle.make} ${vehicle.model}` : 'Not selected'}</strong></div>
-                            <div class="summary-row"><span>Body color</span><strong id="buildColorValue">${(car.color || '#556B2F').toUpperCase()}</strong></div>
-                            <label class="color-picker-row">Change color
-                                <input type="color" value="${car.color || '#556B2F'}" aria-label="Build body color" onchange="updateBuildColor(this.value)">
-                            </label>
-                            <div class="summary-row"><span>Installed parts</span><strong>${installedParts.length}</strong></div>
-                            <div class="summary-cost"><span>Estimated parts total</span><strong>${formatCurrency(estimate.low)}–${formatCurrency(estimate.high)}</strong></div>
-                            <p class="estimate-disclaimer">Rough planning range in USD; labor, fitment, and supplier pricing are not included.</p>
+                            <div class="base-vehicle-color">
+                                <div class="summary-row"><span>Body color</span><strong id="buildColorValue">${(car.color || '#556B2F').toUpperCase()}</strong></div>
+                                <label class="color-picker-row">Change color
+                                    <input type="color" value="${car.color || '#556B2F'}" aria-label="Build body color" onchange="updateBuildColor(this.value)">
+                                </label>
+                            </div>
                         </div>
                         
                         <div class="preview-parts-list">
@@ -1513,6 +1508,13 @@ function renderCarBuilder() {
                                     </div>
                                 `).join('')}
                             `}
+                        </div>
+                        <div class="build-summary">
+                            <div class="build-summary-heading">Build summary</div>
+                            <div class="summary-row"><span>Vehicle</span><strong>${vehicle.make && vehicle.model && vehicle.year ? `${vehicle.year} ${vehicle.make} ${vehicle.model}` : 'Not selected'}</strong></div>
+                            <div class="summary-row"><span>Installed parts</span><strong>${installedParts.length}</strong></div>
+                            <div class="summary-cost"><span>Estimated parts total</span><strong>${formatCurrency(estimate.low)}–${formatCurrency(estimate.high)}</strong></div>
+                            <p class="estimate-disclaimer">Rough planning range in USD; labor, fitment, and supplier pricing are not included.</p>
                         </div>
                     </div>
                 </div>
