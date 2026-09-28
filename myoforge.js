@@ -1245,7 +1245,7 @@ function renderLandingPage() {
                 <div class="landing-feature-grid">
                     <article><i class="fas fa-layer-group"></i><h3>Every layer matters</h3><p>Explore powertrain, structure, cabin, electronics, safety, utility, and finish in one calm workspace.</p></article>
                     <article><i class="fas fa-book-open"></i><h3>Explore the full catalog</h3><p>Move freely across powertrain, structure, cabin, electronics, safety, utility, and competition systems.</p></article>
-                    <article><i class="fas fa-download"></i><h3>Take your build with you</h3><p>Download a JSON copy of any build. A database for returning to saved cars is coming soon.</p></article>
+                    <article><i class="fas fa-download"></i><h3>Take your build with you</h3><p>Download a copy of any build. A database for saved cars is coming soon.</p></article>
                 </div>
             </section>
             <section class="developer-section">
