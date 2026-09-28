@@ -1253,7 +1253,7 @@ function renderLandingPage() {
                     <div class="eyebrow">Behind the forge</div>
                     <h2>Built by a student.</h2>
                 </div>
-                <p>MyoForge is a personal experiment in making automotive knowledge feel tangible. It is designed to give curious people a place to ask “what if?” and turn that question into a considered build.<br><br>Built by a student with an aim to bring the car community together give them a way of expressing their wildest ideas.<br><br>For inquiries, contact the <a style="color: #ffffff;" href="mailto:likhith.lokanadham@outlook.com">MyoForge team</a>.</p>
+                <p>MyoForge is a personal experiment in making automotive knowledge feel tangible. It is designed to give curious people a place to ask <b>"what if?"</b> and turn that question into a considered build.<br><br>Built by a student with an aim to bring the car community together give them a way of expressing their wildest ideas.<br><br>For inquiries, contact the <a style="color: #ffffff;" href="mailto:likhith.lokanadham@outlook.com">MyoForge team</a>.</p>
             </section>
         </div>
     `;
