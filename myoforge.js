@@ -1327,7 +1327,7 @@ function renderEnthusiastGuide() {
                 
                 <div class="guide-navigation">
                     <button class="guide-nav-btn guide-download-btn" onclick="downloadPartsGuide()"><i class="fas fa-download" aria-hidden="true"></i> Download complete parts guide</button>
-                    <button class="skip-guide-btn guide-nav-btn" onclick="skipGuideAndBuild()">Skip & Build Now</button>
+                    <button class="skip-guide-btn guide-nav-btn" onclick="skipGuideAndBuild()"><b>Skip & Build Now</b></button>
                     <button class="guide-nav-btn" style="background: linear-gradient(135deg, #6B8E23, #556B2F);  color: white;" 
                             onclick="startBuilding()">Let's Go!</button>
                 </div>
