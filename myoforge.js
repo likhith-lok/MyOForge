@@ -1631,7 +1631,7 @@ function renderStorageNotice() {
     return `
         <div class="storage-notice" role="status">
             <i class="fas fa-database" aria-hidden="true"></i>
-            <span><strong>Car database coming soon.</strong> Builds are temporary in this session; download a JSON copy to keep one.</span>
+            <span><strong>Car database coming soon.</strong> Builds are temporary in this session. Download a JSON copy to keep one.</span>
         </div>
     `;
 }
