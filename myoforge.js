@@ -1626,7 +1626,7 @@ function renderAppHeader() {
         </header>
     `;
 }
-
+//commit
 function renderStorageNotice() {
     return `
         <div class="storage-notice" role="status">
